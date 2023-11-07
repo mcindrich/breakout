@@ -1,22 +1,21 @@
 #include "Game.h"
-#include "GameScene.h"
 #include "LevelScene.h"
+#include "MainMenuScene.h"
 
 #include <stdexcept>
 
-Game::Game(SDL_Window* window) : m_running(false), m_window(window)
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_sdlrenderer2.h>
+
+Game::Game(SDL_Window* window, SDL_Renderer *renderer) : m_running(false), m_window(window), m_renderer(renderer)
 {
-	// create a renderer
-	m_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (!m_renderer) {
-		throw std::runtime_error("Unable to create a hardware accelerated renderer");
-	}
-	
 	// initialize scenes
-	m_sceneManager.addScene("LevelScene", new LevelScene(this, 0));
+	m_sceneManager.addScene("Level0Scene", new LevelScene(this, 0));
+	m_sceneManager.addScene("MainMenuScene", new MainMenuScene(this));
 
 	// setup current scene
-	m_sceneManager.setCurrentScene("LevelScene");
+	m_sceneManager.setCurrentScene("MainMenuScene");
 }
 
 void Game::run()
@@ -34,8 +33,8 @@ void Game::run()
 		current_scene->update(m_deltaTimer.restart());
 
 		// call render
-		SDL_SetRenderDrawColor(m_renderer, 35, 35, 35, 255);
-		SDL_RenderClear(m_renderer);
+		// SDL_SetRenderDrawColor(m_renderer, 35, 35, 35, 255);
+		// SDL_RenderClear(m_renderer);
 
 		// render scene to the renderer
 		current_scene->render(m_renderer);
@@ -58,4 +57,16 @@ SDL_Window* Game::getWindow()
 SDL_Renderer* Game::getRenderer()
 {
 	return m_renderer;
+}
+
+void Game::setCurrentScene(const std::string& scene_name)
+{
+	m_sceneManager.setCurrentScene(scene_name);
+}
+
+Game::~Game()
+{
+	ImGui_ImplSDLRenderer2_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
 }

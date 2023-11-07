@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)/deps/SDL/include;$(ProjectDir)/deps/SDL_image/include;$(ProjectDir)/deps/SDL_ttf/include;$(ProjectDir)/deps/glm/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/deps/SDL/include;$(ProjectDir)/deps/SDL_image/include;$(ProjectDir)/deps/SDL_ttf/include;$(ProjectDir)/deps/glm/include;$(ProjectDir)/deps/tinyxml2/src;$(ProjectDir)/deps/imgui/src;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)/deps/SDL/lib/x64;$(ProjectDir)/deps/SDL_image/lib/x64;$(ProjectDir)/deps/SDL_ttf/lib/x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -133,41 +133,62 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="breakout.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickType.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui_demo.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui_draw.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui_impl_sdlrenderer2.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="deps\imgui\src\imgui_widgets.cpp" />
+    <ClCompile Include="deps\tinyxml2\src\tinyxml2.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="HUDScene.cpp" />
     <ClCompile Include="ImpenetrableBrick.cpp" />
     <ClCompile Include="IRenderObject.cpp" />
     <ClCompile Include="IScene.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelScene.cpp" />
+    <ClCompile Include="MainMenuScene.cpp" />
     <ClCompile Include="NormalBrick.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="tinyxml2.cpp" />
+    <ClCompile Include="UIScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BrickType.h" />
+    <ClInclude Include="deps\imgui\src\imconfig.h" />
+    <ClInclude Include="deps\imgui\src\imgui.h" />
+    <ClInclude Include="deps\imgui\src\imgui_impl_sdl2.h" />
+    <ClInclude Include="deps\imgui\src\imgui_impl_sdlrenderer2.h" />
+    <ClInclude Include="deps\imgui\src\imgui_internal.h" />
+    <ClInclude Include="deps\imgui\src\imstb_rectpack.h" />
+    <ClInclude Include="deps\imgui\src\imstb_textedit.h" />
+    <ClInclude Include="deps\imgui\src\imstb_truetype.h" />
+    <ClInclude Include="deps\tinyxml2\src\tinyxml2.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="HUDScene.h" />
     <ClInclude Include="ImpenetrableBrick.h" />
     <ClInclude Include="IRenderObject.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelScene.h" />
+    <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="NormalBrick.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="UIScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="assets\levels\level-0.xml" />

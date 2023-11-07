@@ -6,7 +6,7 @@
 
 #include "BrickType.h"
 
-#include "tinyxml2.h"
+#include <tinyxml2.h>
 using namespace tinyxml2;
 
 using BricksLayout = std::vector<std::vector<char>>;

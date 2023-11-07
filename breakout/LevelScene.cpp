@@ -5,11 +5,12 @@
 #include "Ball.h"
 #include "ImpenetrableBrick.h"
 #include "NormalBrick.h"
+#include "HUDScene.h"
 
 #include <sstream>
 #include <iostream>
 
-#include "tinyxml2.h"
+#include <tinyxml2.h>
 using namespace tinyxml2;
 
 LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
@@ -30,6 +31,10 @@ LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
 	// create game objects from the level configuration
 	m_levelBackground = level_config.getBackgroundTexture();
 
+	// get window size
+	glm::ivec2 window_size;
+	SDL_GetWindowSize(getGameRef()->getWindow(), &window_size.x, &window_size.y);
+
 	// load textures
 	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bricks/brick-01.png", "bricks/brick-01.png");
 	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bricks/brick-02.png", "bricks/brick-02.png");
@@ -42,45 +47,20 @@ LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
 	// create game objects
 	m_paddle = std::make_unique<Paddle>(m_texManager);
 	m_ball = std::make_unique<Ball>(m_texManager);
+	m_background = std::make_unique<Background>(m_texManager, m_levelBackground, window_size);
+
+	// setup HUD part of the scene
+	m_hudScene = std::make_unique<HUDScene>(getGameRef(), this);
 
 	auto &bricks_layout = level_config.getBricksLayout();
-	auto &brick_types = level_config.getBrickTypes();
-
-	//auto& bricks_layout = m_level->getBricksLayout();
-	//auto& brick_types = m_level->getBrickTypes();
-
-	//int x, y = 0;
-	//const auto BRICK_WIDTH = 40;
-	//const auto BRICK_HEIGHT = 15;
-
-	//for (unsigned i = 0; i < m_level->getRowCount(); i++) {
-	//	x = 2;
-	//	for (unsigned j = 0; j < m_level->getColumnCount(); j++) {
-	//		auto current_brick = bricks_layout[i][j];
-
-	//		if (current_brick != '_') {
-	//			auto brick_type = brick_types.at(current_brick);
-	//			auto texture_name = brick_type.getBrickTextureName();
-	//			auto& texture = m_texManager.getTexture(texture_name);
-
-	//			SDL_Rect texture_rect = { x, y, BRICK_WIDTH, BRICK_HEIGHT, };
-
-
-	//			SDL_RenderCopy(renderer, texture.get(), NULL, &texture_rect);
-	//		}
-	//		x += BRICK_WIDTH + 2;
-	//	}
-	//	y += BRICK_HEIGHT * 2;
-	//}
-	glm::ivec2 window_size;
-	SDL_GetWindowSize(getGameRef()->getWindow(), &window_size.x, &window_size.y);
+	auto& brick_types = level_config.getBrickTypes();
 
 	// use this position to calculate positions for each brick
-	glm::vec2 brick_position(0, level_config.getRowSpacing());
+	glm::vec2 brick_position(m_background->getPosition().x, m_background->getPosition().y + level_config.getRowSpacing());
 
 	// use constant calculated size for each brick depending on a number of bricks and column spacing
 	const auto bricks_row_count = level_config.getColumnCount();
-	glm::vec2 brick_size = glm::vec2((window_size.x - (bricks_row_count + 1) * level_config.getColumnSpacing()) / (float)bricks_row_count, 15);
+	glm::vec2 brick_size = glm::vec2((m_background->getSize().x - (bricks_row_count + 1) * level_config.getColumnSpacing()) / (float)bricks_row_count, 15);
 
 	std::cout << "Size: " << brick_size.x << " : " << brick_size.y << std::endl;
 
@@ -94,7 +74,7 @@ LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
 	m_bricks.reserve(level_config.getRowCount());
 	for (unsigned int i = 0; i < level_config.getRowCount(); i++) {
 		m_bricks.push_back(std::vector<std::unique_ptr<Brick>>());
-		brick_position.x = (float)level_config.getColumnSpacing();
+		brick_position.x = m_background->getPosition().x + (float)level_config.getColumnSpacing();
 		for (unsigned int j = 0; j < level_config.getColumnCount(); j++) {
 			auto& current_brick_sym = bricks_layout[i][j];
 
@@ -114,6 +94,10 @@ LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
 		}
 		brick_position.y += brick_size.y + level_config.getRowSpacing();
 	}
+
+	// initial count
+	m_startTimer.restart();
+	m_startCounter = 0;
 }
 
 void LevelScene::processEvents()
@@ -141,6 +125,7 @@ void LevelScene::update(float delta)
 	{
 		m_paddle->moveRight(delta);
 	}
+	m_hudScene->update(delta);
 }
 
 void LevelScene::render(SDL_Renderer* renderer)
@@ -149,20 +134,12 @@ void LevelScene::render(SDL_Renderer* renderer)
 	renderLevelBricks(renderer);
 	renderPaddle(renderer);
 	renderBall(renderer);
+	renderHUD(renderer);
 }
 
 void LevelScene::renderLevelBackground(SDL_Renderer* renderer)
 {
-	int width, height;
-	SDL_Rect bg_rect;
-
-	SDL_GetWindowSize(getGameRef()->getWindow(), &width, &height);
-
-	bg_rect = { 0, 0, width, height };
-
-	auto& texture_ptr = m_texManager.getTexture(m_levelBackground);
-
-	SDL_RenderCopy(renderer, texture_ptr.get(), NULL, &bg_rect);
+	m_background->render(renderer);
 }
 
 void LevelScene::renderLevelBricks(SDL_Renderer* renderer)
@@ -182,4 +159,9 @@ void LevelScene::renderPaddle(SDL_Renderer* renderer)
 void LevelScene::renderBall(SDL_Renderer* renderer)
 {
 	m_ball->render(renderer);
+}
+
+void LevelScene::renderHUD(SDL_Renderer* renderer)
+{
+	m_hudScene->render(renderer);
 }

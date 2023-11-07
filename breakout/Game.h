@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <SDL.h>
+#include <imgui.h>
 
 #include "SceneManager.h"
 #include "Timer.h"
@@ -12,7 +13,7 @@
 class Game
 {
 public:
-	Game(SDL_Window *window);
+	Game(SDL_Window *window, SDL_Renderer *renderer);
 
 	void run();
 
@@ -20,6 +21,10 @@ public:
 
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
+
+	void setCurrentScene(const std::string& scene_name);
+
+	~Game();
 
 private:
 	SceneManager m_sceneManager;

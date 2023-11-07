@@ -10,11 +10,13 @@ float Timer::restart()
     std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
 
     float ret = 0;
+    long long duration;
+
     if (m_pause)
-        ret = std::chrono::duration_cast<std::chrono::microseconds>(m_pauseStart - m_start).count();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(m_pauseStart - m_start).count();
     else
-        ret = std::chrono::duration_cast<std::chrono::microseconds>(end - m_start).count();
-    ret = ret / 1000000.0f - m_pauseTime;
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(end - m_start).count();
+    ret = duration / 1000000.0f - m_pauseTime;
 
     m_start = end;
     m_pauseStart = end;
@@ -28,12 +30,13 @@ float Timer::getElapsedTime()
     std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
 
     float ret = 0;
+    long long duration;
     if (m_pause)
-        ret = std::chrono::duration_cast<std::chrono::microseconds>(m_pauseStart - m_start).count();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(m_pauseStart - m_start).count();
     else
-        ret = std::chrono::duration_cast<std::chrono::microseconds>(end - m_start).count();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(end - m_start).count();
 
-    return ret / 1000000.0f - m_pauseTime;
+    return duration / 1000000.0f - m_pauseTime;
 }
 
 void Timer::pause()

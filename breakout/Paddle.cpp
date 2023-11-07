@@ -1,8 +1,8 @@
 #include "Paddle.h"
 
-constexpr auto PADDLE_SPEED = 200;
+constexpr auto PADDLE_SPEED = 500;
 
-Paddle::Paddle(TextureManager& tm) : m_position(400, 700), m_size(60, 10)
+Paddle::Paddle(TextureManager& tm) : m_position(400, 780), m_size(60, 10)
 {
 	setTexture(tm.getTexture("paddle.png").get());
 }
