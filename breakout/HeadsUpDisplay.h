@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IRenderObject.h"
+#include "AssetManager.h"
 #include "FontAsset.h"
 
 #include <glm/glm.hpp>
@@ -9,17 +10,22 @@ class HeadsUpDisplay :
     public IRenderObject
 {
 public:
-    HeadsUpDisplay(unsigned int &lives_ref, unsigned int &points_ref, unsigned int &level_ref, glm::vec2 window_size);
-
-    void setFont(FontAsset& font_asset);
+    HeadsUpDisplay(AssetManager &asset_manager, unsigned int &lives_ref, unsigned int &points_ref, unsigned int &level_ref, glm::vec2 window_size);
 
     virtual void render(SDL_Renderer* renderer) override;
 
 private:
+    void renderLivesText(SDL_Renderer* renderer);
+    void renderPointsText(SDL_Renderer* renderer);
+    void renderLevelText(SDL_Renderer* renderer);
+
     unsigned int& m_livesRef;
     unsigned int& m_pointsRef;
     unsigned int& m_levelRef;
+    FontAsset& m_font;
 
-    TTF_Font* m_font;
+    glm::vec2 m_livesTextPosition;
+    glm::vec2 m_pointsTextPosition;
+    glm::vec2 m_levelTextPosition;
 };
 

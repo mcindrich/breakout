@@ -60,6 +60,7 @@ private:
     std::unique_ptr<Paddle> m_paddle;
     std::unique_ptr<Ball> m_ball;
     std::unique_ptr<Background> m_background;
+    std::unique_ptr<HeadsUpDisplay> m_hud;
     std::vector<std::vector<std::unique_ptr<Brick>>> m_bricks;
 
     Timer m_startTimer;
@@ -69,8 +70,5 @@ private:
     unsigned int m_level;
     unsigned int m_points;
     unsigned int m_lives;
-
-    // HUD
-    HeadsUpDisplay m_hud;
 };
 

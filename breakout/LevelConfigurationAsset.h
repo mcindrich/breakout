@@ -55,6 +55,5 @@ private:
 	// data
 	BrickTypesMap m_brickTypes;
 	BricksLayout m_bricksLayout;
-
 };
 

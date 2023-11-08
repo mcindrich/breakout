@@ -8,7 +8,7 @@
 	PaddleTexture="paddles/paddle.png"
 	BallTexture="balls/ball.png"
 	PaddleSpeed="500"
-	BallSpeed="50">
+	BallSpeed="0">
 	<BrickTypes>
 		<!-- Soft Brick -->
 		<BrickType

@@ -153,9 +153,6 @@
     <ClCompile Include="BrickType.cpp">
       <Filter>Source Files\Config</Filter>
     </ClCompile>
-    <ClCompile Include="LevelConfigurationAsset.cpp">
-      <Filter>Source Files\Config</Filter>
-    </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
@@ -164,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelConfigurationAsset.cpp">
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +254,6 @@
     <ClInclude Include="BrickType.h">
       <Filter>Header Files\Config</Filter>
     </ClInclude>
-    <ClInclude Include="LevelConfigurationAsset.h">
-      <Filter>Header Files\Config</Filter>
-    </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
@@ -265,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelConfigurationAsset.h">
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

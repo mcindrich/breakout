@@ -14,7 +14,7 @@
 #include <sstream>
 #include <iostream>
 
-LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(level), m_points(0), m_lives(3), m_hud(m_lives, m_points, m_level, getWindowSize())
+LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(level), m_points(0), m_lives(3)
 {
 	loadLevelConfigurationAsset(level);
 	loadBackgroundAsset();
@@ -166,7 +166,7 @@ void LevelScene::loadBrickSFXAssets()
 
 void LevelScene::loadFontAssets()
 {
-	m_assetManager.loadAsset<FontAsset>("./assets/fonts/Roboto-Regular.ttf", "HUDFont", 20);
+	m_assetManager.loadAsset<FontAsset>("./assets/fonts/Roboto-Regular.ttf", "HUDFont", 50);
 }
 
 void LevelScene::generateBricks()
@@ -182,8 +182,6 @@ void LevelScene::generateBricks()
 	// use constant calculated size for each brick depending on a number of bricks and column spacing
 	const auto bricks_row_count = level_config.getColumnCount();
 	glm::vec2 brick_size = glm::vec2((m_background->getSize().x - (bricks_row_count + 1) * level_config.getColumnSpacing()) / (float)bricks_row_count, 15);
-
-	std::cout << "Size: " << brick_size.x << " : " << brick_size.y << std::endl;
 
 	// |- COL spacing -| |----| ... |----| |- COL spacing-|
 	// |- ROW spacing -|
@@ -231,6 +229,7 @@ void LevelScene::createGameObjects()
 	m_paddle = std::make_unique<Paddle>(m_textureManager, level_config.getPaddleTexture(), level_config.getPaddleSpeed());
 	m_ball = std::make_unique<Ball>(m_textureManager, level_config.getBallTexture(), level_config.getBallSpeed());
 	m_background = std::make_unique<Background>(m_textureManager, level_config.getBackgroundTexture(), window_size);
+	m_hud = std::make_unique<HeadsUpDisplay>(m_assetManager, m_lives, m_points, m_level, getWindowSize());
 }
 
 void LevelScene::setupStartTimer()
@@ -242,7 +241,7 @@ void LevelScene::setupStartTimer()
 
 void LevelScene::setupHUD()
 {
-	m_hud.setFont(m_assetManager.getAsset<FontAsset>("HUDFont"));
+
 }
 
 void LevelScene::renderLevelBackground(SDL_Renderer* renderer)
@@ -271,6 +270,7 @@ void LevelScene::renderBall(SDL_Renderer* renderer)
 
 void LevelScene::renderHUD(SDL_Renderer* renderer)
 {
+	m_hud->render(renderer);
 }
 
 glm::ivec2 LevelScene::getWindowSize()

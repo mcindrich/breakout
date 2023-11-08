@@ -86,6 +86,11 @@ int main()
 	// close SDL
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	// Quit all SDL stuff
+	Mix_Quit();
+	TTF_Quit();
+	IMG_Quit();
 	SDL_Quit();
 
 	return error;

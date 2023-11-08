@@ -27,4 +27,5 @@ TTF_Font* FontAsset::getFont() const
 
 FontAsset::~FontAsset()
 {
+	TTF_CloseFont(m_font);
 }
