@@ -7,7 +7,7 @@ class Game;
 class IScene
 {
 public:
-	IScene(Game* game);
+	IScene(Game& game);
 
 	virtual void processEvents() = 0;
 
@@ -15,9 +15,9 @@ public:
 
 	virtual void render(SDL_Renderer *renderer) = 0;
 
-	Game* getGameRef();
+	Game& getGameRef();
 
 private:
-	Game* m_game;
+	Game& m_game;
 };
 

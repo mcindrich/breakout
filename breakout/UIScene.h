@@ -8,7 +8,7 @@ class UIScene :
     public IScene
 {
 public:
-    UIScene(Game* game);
+    UIScene(Game& game);
 
     virtual void processEvents() override;
 

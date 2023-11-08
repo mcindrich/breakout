@@ -10,7 +10,7 @@ class ImpenetrableBrick :
     public Brick
 {
 public:
-    ImpenetrableBrick(TextureManager& tm, BrickType& bt, glm::vec2 position, glm::ivec2 size);
+    ImpenetrableBrick(TextureManager& texture_manager, BrickType& bt, glm::vec2 position, glm::ivec2 size);
 
     virtual void hit() override;
 };

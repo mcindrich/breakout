@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)/deps/SDL/include;$(ProjectDir)/deps/SDL_image/include;$(ProjectDir)/deps/SDL_ttf/include;$(ProjectDir)/deps/glm/include;$(ProjectDir)/deps/tinyxml2/src;$(ProjectDir)/deps/imgui/src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)/deps/SDL/lib/x64;$(ProjectDir)/deps/SDL_image/lib/x64;$(ProjectDir)/deps/SDL_ttf/lib/x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)/deps/SDL/include;$(ProjectDir)/deps/SDL_mixer/include;$(ProjectDir)/deps/SDL_image/include;$(ProjectDir)/deps/SDL_ttf/include;$(ProjectDir)/deps/glm/include;$(ProjectDir)/deps/tinyxml2/src;$(ProjectDir)/deps/imgui/src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)/deps/SDL/lib/x64;$(ProjectDir)/deps/SDL_image/lib/x64;$(ProjectDir)/deps/SDL_mixer/lib/x64;$(ProjectDir)/deps/SDL_ttf/lib/x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,7 +113,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="breakout.cpp" />
@@ -146,22 +147,28 @@
     <ClCompile Include="deps\imgui\src\imgui_tables.cpp" />
     <ClCompile Include="deps\imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="deps\tinyxml2\src\tinyxml2.cpp" />
+    <ClCompile Include="FontAsset.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="HUDScene.cpp" />
+    <ClCompile Include="HeadsUpDisplay.cpp" />
+    <ClCompile Include="IAsset.cpp" />
+    <ClCompile Include="ImageAsset.cpp" />
+    <ClCompile Include="IMovable.cpp" />
     <ClCompile Include="ImpenetrableBrick.cpp" />
     <ClCompile Include="IRenderObject.cpp" />
     <ClCompile Include="IScene.cpp" />
-    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelConfigurationAsset.cpp" />
     <ClCompile Include="LevelScene.cpp" />
     <ClCompile Include="MainMenuScene.cpp" />
     <ClCompile Include="NormalBrick.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SFXAsset.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Brick.h" />
@@ -175,17 +182,22 @@
     <ClInclude Include="deps\imgui\src\imstb_textedit.h" />
     <ClInclude Include="deps\imgui\src\imstb_truetype.h" />
     <ClInclude Include="deps\tinyxml2\src\tinyxml2.h" />
+    <ClInclude Include="FontAsset.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="HUDScene.h" />
+    <ClInclude Include="HeadsUpDisplay.h" />
+    <ClInclude Include="IAsset.h" />
+    <ClInclude Include="ImageAsset.h" />
+    <ClInclude Include="IMovable.h" />
     <ClInclude Include="ImpenetrableBrick.h" />
     <ClInclude Include="IRenderObject.h" />
     <ClInclude Include="IScene.h" />
-    <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelConfigurationAsset.h" />
     <ClInclude Include="LevelScene.h" />
     <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="NormalBrick.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SFXAsset.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIScene.h" />

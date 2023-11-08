@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-UIScene::UIScene(Game* game) : IScene(game)
+UIScene::UIScene(Game& game) : IScene(game)
 {
 }
 
@@ -21,7 +21,7 @@ void UIScene::processEvents()
 
         // handle quit
         if (event.type == SDL_QUIT) {
-            getGameRef()->stopRunning();
+            getGameRef().stopRunning();
         }
     }
 }

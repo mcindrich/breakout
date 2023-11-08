@@ -26,6 +26,7 @@ public:
 	std::string getBreakSoundName() const;
 
 private:
+	friend class LevelConfigurationAsset;
 	friend class Level;
 	BrickType(XMLElement* brick_element);
 

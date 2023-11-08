@@ -1,6 +1,6 @@
 #include "BrickType.h"
 
-BrickType::BrickType()
+BrickType::BrickType() : m_ID(0)
 {
 }
 

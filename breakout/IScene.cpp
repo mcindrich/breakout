@@ -1,10 +1,11 @@
 #include "IScene.h"
 
-IScene::IScene(Game* game) : m_game(game)
+
+IScene::IScene(Game& game) : m_game(game)
 {
 }
 
-Game* IScene::getGameRef()
+Game& IScene::getGameRef()
 {
 	return m_game;
 }

@@ -13,7 +13,7 @@ public:
 	SceneManager();
 
 	template <typename SceneType>
-	void addScene(const std::string &name, Game* game);
+	void addScene(const std::string &name, Game& game);
 
 	void addScene(const std::string& name, IScene* scene);
 
@@ -31,7 +31,7 @@ private:
 };
 
 template<typename SceneType>
-inline void SceneManager::addScene(const std::string& name, Game* game)
+inline void SceneManager::addScene(const std::string& name, Game& game)
 {
 	auto scene = std::make_unique<SceneType>(game);
 

@@ -4,7 +4,11 @@
 	ColumnCount="20"
 	RowSpacing="3"
 	ColumnSpacing="3"
-	BackgroundTexture="bg/background.png">
+	BackgroundTexture="backgrounds/background.png"
+	PaddleTexture="paddles/paddle.png"
+	BallTexture="balls/ball.png"
+	PaddleSpeed="500"
+	BallSpeed="50">
 	<BrickTypes>
 		<!-- Soft Brick -->
 		<BrickType

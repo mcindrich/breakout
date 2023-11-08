@@ -7,7 +7,7 @@ class MainMenuScene :
     public UIScene
 {
 public:
-    MainMenuScene(Game *game);
+    MainMenuScene(Game &game);
 
     virtual void update(float delta) override;
     virtual void render(SDL_Renderer* renderer) override;

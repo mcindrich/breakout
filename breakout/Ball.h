@@ -2,23 +2,18 @@
 
 #include "TextureManager.h"
 #include "IRenderObject.h"
+#include "IMovable.h"
 
 #include <glm/glm.hpp>
 
-class Ball :
-    public IRenderObject
+class Ball : public IMovable
 {
 public:
-	Ball(TextureManager& tm);
+	Ball(TextureManager& texture_manager, const std::string &ball_texture, const float speed);
 
 	virtual void render(SDL_Renderer* renderer) override;
 
-	void setDirection(glm::vec2 dir);
-	void update(float delta);
-
 private:
-	glm::vec2 m_direction;
-	glm::vec2 m_position;
-	glm::ivec2 m_size;
+	void generateRandomDirection();
 };
 

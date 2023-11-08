@@ -1,28 +1,32 @@
 #include "Ball.h"
+#include "ImageAsset.h"
 
-constexpr auto BALL_SPEED = 200;
+#include <stdexcept>
 
-Ball::Ball(TextureManager& tm) : m_position(400, 650), m_size(10, 10), m_direction(1, 1)
+Ball::Ball(TextureManager& texture_manager, const std::string& ball_texture, const float speed)
 {
-	setTexture(tm.getTexture("ball.png").get());
+	auto texture = texture_manager.getTexturePtr(ball_texture);
+	setTexture(texture);
+	setSpeed(speed);
+	setPosition(glm::vec2(400, 650));
+	setSize(glm::vec2(10, 10));
+
+	// generate starting random direction
+	generateRandomDirection();
 }
 
 void Ball::render(SDL_Renderer* renderer)
 {
 	// render on position
-	SDL_Rect rect;
+	SDL_FRect rect;
 
-	rect = { (int)m_position.x - m_size.x / 2, (int)m_position.y - m_size.y / 2, m_size.x, m_size.y };
+	rect = { getPosition().x - getSize().x / 2, getPosition().y - getSize().y / 2, getSize().x, getSize().y};
 
-	SDL_RenderCopy(renderer, getTexture(), NULL, &rect);
+	SDL_RenderCopyF(renderer, getTexture(), NULL, &rect);
 }
 
-void Ball::setDirection(glm::vec2 dir)
+void Ball::generateRandomDirection()
 {
-	m_direction = glm::normalize(dir);
-}
-
-void Ball::update(float delta)
-{
-	m_position = m_direction * delta * (float)BALL_SPEED;
+	auto random_x = -0.5;
+	setDirection(glm::normalize(glm::vec2(random_x, 1)));
 }

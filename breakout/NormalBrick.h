@@ -10,7 +10,7 @@ class NormalBrick :
     public Brick
 {
 public:
-    NormalBrick(TextureManager &tm, BrickType &bt, glm::vec2 position, glm::ivec2 size);
+    NormalBrick(TextureManager &texture_manager, BrickType &bt, glm::vec2 position, glm::ivec2 size);
 
     virtual void hit() override;
 

@@ -7,7 +7,7 @@
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
 
-MainMenuScene::MainMenuScene(Game* game) : UIScene(game)
+MainMenuScene::MainMenuScene(Game& game) : UIScene(game)
 {
 }
 
@@ -44,11 +44,11 @@ void MainMenuScene::update(float delta)
     
     if (UIDrawButtonCentered("Play"))
     {
-        getGameRef()->setCurrentScene("Level0Scene");
+        getGameRef().setCurrentScene("Level0Scene");
     }
     if (UIDrawButtonCentered("Quit"))
     {
-        getGameRef()->stopRunning();
+        getGameRef().stopRunning();
     }
     
     ImGui::PopStyleColor(3);

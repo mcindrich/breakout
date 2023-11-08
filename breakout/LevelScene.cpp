@@ -1,58 +1,179 @@
 #include "LevelScene.h"
-#include "Level.h"
 #include "Game.h"
 #include "Paddle.h"
 #include "Ball.h"
 #include "ImpenetrableBrick.h"
 #include "NormalBrick.h"
-#include "HUDScene.h"
+
+// assets
+#include "LevelConfigurationAsset.h"
+#include "FontAsset.h"
+#include "SFXAsset.h"
+#include "ImageAsset.h"
 
 #include <sstream>
 #include <iostream>
 
-#include <tinyxml2.h>
-using namespace tinyxml2;
-
-LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
+LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(level), m_points(0), m_lives(3), m_hud(m_lives, m_points, m_level, getWindowSize())
 {
-	std::stringstream ss;
+	loadLevelConfigurationAsset(level);
+	loadBackgroundAsset();
+	loadPaddleImageAsset();
+	loadBallImageAsset();
+	loadBrickImageAssets();
+	loadBrickSFXAssets();
+	loadFontAssets();
+	createGameObjects();
+	generateBricks();
+	setupStartTimer();
+	setupHUD();
+}
 
-	ss << "./assets/levels/level-" << level << ".xml";
+void LevelScene::processEvents()
+{
+	SDL_Event event;
 
-	auto level_path = ss.str();
+	// check for window close event
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			getGameRef().stopRunning();
+			break;
+		}
+	}
+}
 
-	auto document = XMLDocument(true, tinyxml2::COLLAPSE_WHITESPACE);
-	
-	document.LoadFile(level_path.c_str());
+void LevelScene::update(float delta)
+{
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+	if (state[SDL_SCANCODE_LEFT])
+	{
+		m_paddle->moveLeft(delta);
+	}
+	if (state[SDL_SCANCODE_RIGHT])
+	{
+		m_paddle->moveRight(delta);
+	}
 
-	auto root_element = document.FirstChildElement();
-	auto level_config = Level(root_element);
+	m_ball->updatePosition(delta);
+}
+
+void LevelScene::render(SDL_Renderer* renderer)
+{
+	renderLevelBackground(renderer);
+	renderLevelBricks(renderer);
+	renderBall(renderer);
+	renderPaddle(renderer);
+	renderHUD(renderer);
+}
+
+void LevelScene::loadLevelConfigurationAsset(unsigned int level)
+{
+	std::stringstream path_ss;
+	path_ss << "./assets/levels/level-" << level << ".xml";
+	auto level_path = path_ss.str();
+
+	m_assetManager.loadAsset<LevelConfigurationAsset>(level_path, "LevelConfiguration");
+}
+
+void LevelScene::loadBackgroundAsset()
+{
+	std::stringstream path_ss;
+
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
 
 	// create game objects from the level configuration
-	m_levelBackground = level_config.getBackgroundTexture();
+	auto background_texture = level_config.getBackgroundTexture();
 
-	// get window size
-	glm::ivec2 window_size;
-	SDL_GetWindowSize(getGameRef()->getWindow(), &window_size.x, &window_size.y);
+	path_ss << "./assets/textures/" << background_texture;
 
-	// load textures
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bricks/brick-01.png", "bricks/brick-01.png");
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bricks/brick-02.png", "bricks/brick-02.png");
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bricks/brick-03.png", "bricks/brick-03.png");
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bricks/brick-04.png", "bricks/brick-04.png");
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/bg/background.png", "bg/background.png");
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/paddle.png", "paddle.png");
-	m_texManager.loadTexture(game->getRenderer(), "./assets/textures/ball.png", "ball.png");
+	auto background_path = path_ss.str();
 
-	// create game objects
-	m_paddle = std::make_unique<Paddle>(m_texManager);
-	m_ball = std::make_unique<Ball>(m_texManager);
-	m_background = std::make_unique<Background>(m_texManager, m_levelBackground, window_size);
+	m_assetManager.loadAsset<ImageAsset>(background_path, background_texture);
+	m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(background_texture), background_texture);
+}
 
-	// setup HUD part of the scene
-	m_hudScene = std::make_unique<HUDScene>(getGameRef(), this);
+void LevelScene::loadBrickImageAssets()
+{
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
 
-	auto &bricks_layout = level_config.getBricksLayout();
+	for (auto &bt : level_config.getBrickTypes()) {
+		std::stringstream path_ss;
+
+		auto texture_name = bt.second.getBrickTextureName();
+
+		path_ss << "./assets/textures/" << texture_name;
+
+		auto texture_path = path_ss.str();
+
+		m_assetManager.loadAsset<ImageAsset>(texture_path, texture_name);
+		m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(texture_name), texture_name);
+	}
+}
+
+void LevelScene::loadPaddleImageAsset()
+{
+	std::stringstream path_ss;
+
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
+
+	auto paddle_texture = level_config.getPaddleTexture();
+
+	path_ss << "./assets/textures/" << paddle_texture;
+
+	auto texture_path = path_ss.str();
+
+	m_assetManager.loadAsset<ImageAsset>(texture_path, paddle_texture);
+	m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(paddle_texture), paddle_texture);
+}
+
+void LevelScene::loadBallImageAsset()
+{
+	std::stringstream path_ss;
+
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
+
+	auto ball_texture = level_config.getBallTexture();
+
+	path_ss << "./assets/textures/" << ball_texture;
+
+	auto texture_path = path_ss.str();
+
+	m_assetManager.loadAsset<ImageAsset>(texture_path, ball_texture);
+	m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(ball_texture), ball_texture);
+}
+
+void LevelScene::loadBrickSFXAssets()
+{
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
+
+	for (auto& bt : level_config.getBrickTypes()) {
+		std::stringstream hit_path_ss;
+		std::stringstream break_path_ss;
+
+		auto hit_sfx_name = bt.second.getHitSoundName();
+		auto break_sfx_name = bt.second.getBreakSoundName();
+
+		hit_path_ss << "./assets/sfx/" << hit_sfx_name;
+		break_path_ss << "./assets/sfx/" << break_sfx_name;
+
+		m_assetManager.loadAsset<SFXAsset>(hit_path_ss.str(), hit_sfx_name);
+		if (!bt.second.isInfinite()) {
+			m_assetManager.loadAsset<SFXAsset>(break_path_ss.str(), break_sfx_name);
+		}
+	}
+}
+
+void LevelScene::loadFontAssets()
+{
+	m_assetManager.loadAsset<FontAsset>("./assets/fonts/Roboto-Regular.ttf", "HUDFont", 20);
+}
+
+void LevelScene::generateBricks()
+{
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
+
+	auto& bricks_layout = level_config.getBricksLayout();
 	auto& brick_types = level_config.getBrickTypes();
 
 	// use this position to calculate positions for each brick
@@ -83,58 +204,45 @@ LevelScene::LevelScene(Game* game, unsigned int level) : IScene(game)
 
 				if (brick_type.isInfinite()) {
 					// add impenetrable brick to the list
-					m_bricks[i].push_back(std::make_unique<ImpenetrableBrick>(m_texManager, brick_type, brick_position, brick_size));
+					m_bricks[i].push_back(std::make_unique<ImpenetrableBrick>(m_textureManager, brick_type, brick_position, brick_size));
 				}
 				else {
 					// add normal brick to the list
-					m_bricks[i].push_back(std::make_unique<NormalBrick>(m_texManager, brick_type, brick_position, brick_size));
+					m_bricks[i].push_back(std::make_unique<NormalBrick>(m_textureManager, brick_type, brick_position, brick_size));
 				}
 			}
 			brick_position.x += brick_size.x + level_config.getColumnSpacing();
 		}
 		brick_position.y += brick_size.y + level_config.getRowSpacing();
 	}
+}
 
+void LevelScene::createGameObjects()
+{
+	// get window size
+	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
+
+	auto &game_ref = getGameRef();
+	auto renderer = game_ref.getRenderer();
+
+	auto window_size = getWindowSize();
+
+	// create game objects
+	m_paddle = std::make_unique<Paddle>(m_textureManager, level_config.getPaddleTexture(), level_config.getPaddleSpeed());
+	m_ball = std::make_unique<Ball>(m_textureManager, level_config.getBallTexture(), level_config.getBallSpeed());
+	m_background = std::make_unique<Background>(m_textureManager, level_config.getBackgroundTexture(), window_size);
+}
+
+void LevelScene::setupStartTimer()
+{
 	// initial count
 	m_startTimer.restart();
 	m_startCounter = 0;
 }
 
-void LevelScene::processEvents()
+void LevelScene::setupHUD()
 {
-	SDL_Event event;
-
-	// check for window close event
-	while (SDL_PollEvent(&event)) {
-		switch (event.type) {
-		case SDL_QUIT:
-			getGameRef()->stopRunning();
-			break;
-		}
-	}
-}
-
-void LevelScene::update(float delta)
-{
-	const Uint8* state = SDL_GetKeyboardState(NULL);
-	if (state[SDL_SCANCODE_LEFT])
-	{
-		m_paddle->moveLeft(delta);
-	}
-	if (state[SDL_SCANCODE_RIGHT])
-	{
-		m_paddle->moveRight(delta);
-	}
-	m_hudScene->update(delta);
-}
-
-void LevelScene::render(SDL_Renderer* renderer)
-{
-	renderLevelBackground(renderer);
-	renderLevelBricks(renderer);
-	renderPaddle(renderer);
-	renderBall(renderer);
-	renderHUD(renderer);
+	m_hud.setFont(m_assetManager.getAsset<FontAsset>("HUDFont"));
 }
 
 void LevelScene::renderLevelBackground(SDL_Renderer* renderer)
@@ -163,5 +271,12 @@ void LevelScene::renderBall(SDL_Renderer* renderer)
 
 void LevelScene::renderHUD(SDL_Renderer* renderer)
 {
-	m_hudScene->render(renderer);
+}
+
+glm::ivec2 LevelScene::getWindowSize()
+{
+	glm::ivec2 window_size = glm::ivec2(0);
+	SDL_GetWindowSize(getGameRef().getWindow(), &window_size.x, &window_size.y);
+
+	return window_size;
 }

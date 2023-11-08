@@ -11,8 +11,8 @@
 Game::Game(SDL_Window* window, SDL_Renderer *renderer) : m_running(false), m_window(window), m_renderer(renderer)
 {
 	// initialize scenes
-	m_sceneManager.addScene("Level0Scene", new LevelScene(this, 0));
-	m_sceneManager.addScene("MainMenuScene", new MainMenuScene(this));
+	m_sceneManager.addScene("Level0Scene", new LevelScene(*this, 0));
+	m_sceneManager.addScene("MainMenuScene", new MainMenuScene(*this));
 
 	// setup current scene
 	m_sceneManager.setCurrentScene("MainMenuScene");
@@ -33,8 +33,8 @@ void Game::run()
 		current_scene->update(m_deltaTimer.restart());
 
 		// call render
-		// SDL_SetRenderDrawColor(m_renderer, 35, 35, 35, 255);
-		// SDL_RenderClear(m_renderer);
+		SDL_SetRenderDrawColor(m_renderer, 35, 35, 35, 255);
+		SDL_RenderClear(m_renderer);
 
 		// render scene to the renderer
 		current_scene->render(m_renderer);
