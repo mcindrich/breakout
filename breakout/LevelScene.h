@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IScene.h"
-#include "TextureManager.h"
 #include "AssetManager.h"
 #include "Paddle.h"
 #include "Ball.h"
@@ -37,9 +36,9 @@ private:
     // initialization helpers
     void loadLevelConfigurationAsset(unsigned int level);
     void loadBackgroundAsset();
-    void loadBrickImageAssets();
-    void loadPaddleImageAsset();
-    void loadBallImageAsset();
+    void loadBrickTextureAssets();
+    void loadPaddleTextureAsset();
+    void loadBallTextureAsset();
     void loadBrickSFXAssets();
     void loadFontAssets();
     void generateBricks();
@@ -56,9 +55,7 @@ private:
     // window helpers
     glm::ivec2 getWindowSize();
 
-    AssetManager m_assetManager; // handles loading of all assets (images, fonts, sounds etc.)
-
-    TextureManager m_textureManager; // handles loading of textures - loads textures only once instead of for example every brick having its own texture
+    AssetManager m_assetManager; // handles loading of all assets (textures, fonts, sounds etc.)
 
     // main game objects - paddle, ball, background, bricks and HUD
     std::unique_ptr<Paddle> m_paddle;

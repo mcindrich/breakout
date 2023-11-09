@@ -1,12 +1,9 @@
 #include "Ball.h"
-#include "ImageAsset.h"
 
 #include <stdexcept>
 
-Ball::Ball(TextureManager& texture_manager, const std::string& ball_texture, const float speed)
+Ball::Ball(TextureAsset& texture, const float speed) : MovableTexture2D(texture)
 {
-	auto texture = texture_manager.getTexturePtr(ball_texture);
-	setTexture(texture);
 	setSpeed(speed);
 	setPosition(glm::vec2(400, 650));
 	setSize(glm::vec2(10, 10));
@@ -22,7 +19,7 @@ void Ball::render(SDL_Renderer* renderer)
 
 	rect = { getPosition().x - getSize().x / 2, getPosition().y - getSize().y / 2, getSize().x, getSize().y};
 
-	SDL_RenderCopyF(renderer, getTexture(), NULL, &rect);
+	SDL_RenderCopyF(renderer, getTextureAsset().getTexture(), NULL, &rect);
 }
 
 void Ball::generateRandomDirection()

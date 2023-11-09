@@ -1,9 +1,7 @@
 #include "Brick.h"
 
-Brick::Brick(TextureManager& texture_manager, const std::string brick_texture, glm::vec2 position, glm::vec2 size, int health) : m_health(health)
+Brick::Brick(TextureAsset& texture, glm::vec2 position, glm::vec2 size, int health) : PositionedTexture2D(texture), m_health(health)
 {
-	auto texture = texture_manager.getTexturePtr(brick_texture);
-	setTexture(texture);
 	setPosition(position);
 	setSize(size);
 }

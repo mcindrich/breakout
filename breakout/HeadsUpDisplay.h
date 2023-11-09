@@ -1,16 +1,16 @@
 #pragma once
 
-#include "IRenderObject.h"
+#include "IRenderable.h"
 #include "AssetManager.h"
 #include "FontAsset.h"
 
 #include <glm/glm.hpp>
 
 class HeadsUpDisplay :
-    public IRenderObject
+    public IRenderable
 {
 public:
-    HeadsUpDisplay(AssetManager &asset_manager, unsigned int &lives_ref, unsigned int &points_ref, unsigned int &level_ref, glm::vec2 window_size);
+    HeadsUpDisplay(FontAsset &font, unsigned int &lives_ref, unsigned int &points_ref, unsigned int &level_ref, glm::vec2 window_size);
 
     virtual void render(SDL_Renderer* renderer) override;
 

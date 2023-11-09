@@ -1,14 +1,14 @@
 #pragma once
 
-#include "TextureManager.h"
-#include "IRenderObject.h"
+#include "PositionedTexture2D.h"
+#include "TextureAsset.h"
 
 #include <glm/glm.hpp>
 
 class Background :
-    public IRenderObject
+    public PositionedTexture2D
 {
 public:
-    Background(TextureManager &texture_manager, const std::string &background_texture, glm::vec2 window_size);
+    Background(TextureAsset& texture, glm::vec2 window_size);
 };
 

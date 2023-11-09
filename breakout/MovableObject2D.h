@@ -1,11 +1,15 @@
 #pragma once
 
-#include "IRenderObject.h"
+#include "IRenderable.h"
+#include "PositionedObject2D.h"
+
 #include <glm/glm.hpp>
 
-class IMovable : public IRenderObject
+class MovableObject2D : public PositionedObject2D
 {
 public:
+	MovableObject2D() = default;
+
 	void setSpeed(float speed);
 	void setDirection(glm::vec2 direction);
 

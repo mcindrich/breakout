@@ -1,7 +1,7 @@
 #include "ImpenetrableBrick.h"
 
-ImpenetrableBrick::ImpenetrableBrick(TextureManager& texture_manager, BrickType& bt, glm::vec2 position, glm::ivec2 size) 
-	: Brick(texture_manager, bt.getBrickTextureName(), position, size, bt.getHitPoints())
+ImpenetrableBrick::ImpenetrableBrick(TextureAsset& texture, BrickType& bt, glm::vec2 position, glm::vec2 size) 
+	: Brick(texture, position, size, bt.getHitPoints())
 {
 }
 

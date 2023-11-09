@@ -9,7 +9,7 @@
 #include "LevelConfigurationAsset.h"
 #include "FontAsset.h"
 #include "SFXAsset.h"
-#include "ImageAsset.h"
+#include "TextureAsset.h"
 
 #include <sstream>
 #include <iostream>
@@ -18,9 +18,9 @@ LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(l
 {
 	loadLevelConfigurationAsset(level);
 	loadBackgroundAsset();
-	loadPaddleImageAsset();
-	loadBallImageAsset();
-	loadBrickImageAssets();
+	loadPaddleTextureAsset();
+	loadBallTextureAsset();
+	loadBrickTextureAssets();
 	loadBrickSFXAssets();
 	loadFontAssets();
 	createGameObjects();
@@ -96,11 +96,10 @@ void LevelScene::loadBackgroundAsset()
 
 	auto background_path = path_ss.str();
 
-	m_assetManager.loadAsset<ImageAsset>(background_path, background_texture);
-	m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(background_texture), background_texture);
+	m_assetManager.loadAsset<TextureAsset>(background_path, background_texture, getGameRef().getRenderer());
 }
 
-void LevelScene::loadBrickImageAssets()
+void LevelScene::loadBrickTextureAssets()
 {
 	auto& level_config = m_assetManager.getAsset<LevelConfigurationAsset>("LevelConfiguration");
 
@@ -113,12 +112,11 @@ void LevelScene::loadBrickImageAssets()
 
 		auto texture_path = path_ss.str();
 
-		m_assetManager.loadAsset<ImageAsset>(texture_path, texture_name);
-		m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(texture_name), texture_name);
+		m_assetManager.loadAsset<TextureAsset>(texture_path, texture_name, getGameRef().getRenderer());
 	}
 }
 
-void LevelScene::loadPaddleImageAsset()
+void LevelScene::loadPaddleTextureAsset()
 {
 	std::stringstream path_ss;
 
@@ -130,11 +128,10 @@ void LevelScene::loadPaddleImageAsset()
 
 	auto texture_path = path_ss.str();
 
-	m_assetManager.loadAsset<ImageAsset>(texture_path, paddle_texture);
-	m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(paddle_texture), paddle_texture);
+	m_assetManager.loadAsset<TextureAsset>(texture_path, paddle_texture, getGameRef().getRenderer());
 }
 
-void LevelScene::loadBallImageAsset()
+void LevelScene::loadBallTextureAsset()
 {
 	std::stringstream path_ss;
 
@@ -146,8 +143,7 @@ void LevelScene::loadBallImageAsset()
 
 	auto texture_path = path_ss.str();
 
-	m_assetManager.loadAsset<ImageAsset>(texture_path, ball_texture);
-	m_textureManager.createTextureFromImage(getGameRef().getRenderer(), m_assetManager.getAsset<ImageAsset>(ball_texture), ball_texture);
+	m_assetManager.loadAsset<TextureAsset>(texture_path, ball_texture, getGameRef().getRenderer());
 }
 
 void LevelScene::loadBrickSFXAssets()
@@ -207,13 +203,15 @@ void LevelScene::generateBricks()
 			if (current_brick_sym != '_') {
 				auto& brick_type = brick_types[current_brick_sym];
 
+				auto& brick_texture = m_assetManager.getAsset<TextureAsset>(brick_type.getBrickTextureName());
+
 				if (brick_type.isInfinite()) {
 					// add impenetrable brick to the list
-					m_bricks[i].push_back(std::make_unique<ImpenetrableBrick>(m_textureManager, brick_type, brick_position, brick_size));
+					m_bricks[i].push_back(std::make_unique<ImpenetrableBrick>(brick_texture, brick_type, brick_position, brick_size));
 				}
 				else {
 					// add normal brick to the list
-					m_bricks[i].push_back(std::make_unique<NormalBrick>(m_textureManager, brick_type, brick_position, brick_size));
+					m_bricks[i].push_back(std::make_unique<NormalBrick>(brick_texture, brick_type, brick_position, brick_size));
 				}
 			}
 			brick_position.x += brick_size.x + level_config.getColumnSpacing();
@@ -232,11 +230,19 @@ void LevelScene::createGameObjects()
 
 	auto window_size = getWindowSize();
 
+	// get all texture refs
+	auto &paddle_texture = m_assetManager.getAsset<TextureAsset>(level_config.getPaddleTexture());
+	auto &ball_texture = m_assetManager.getAsset<TextureAsset>(level_config.getBallTexture());
+	auto &background_texture = m_assetManager.getAsset<TextureAsset>(level_config.getBackgroundTexture());
+
+	// get fonts
+	auto hud_font = m_assetManager.getAsset<FontAsset>("HUDFont");
+
 	// create game objects
-	m_paddle = std::make_unique<Paddle>(m_textureManager, level_config.getPaddleTexture(), level_config.getPaddleSpeed());
-	m_ball = std::make_unique<Ball>(m_textureManager, level_config.getBallTexture(), level_config.getBallSpeed());
-	m_background = std::make_unique<Background>(m_textureManager, level_config.getBackgroundTexture(), window_size);
-	m_hud = std::make_unique<HeadsUpDisplay>(m_assetManager, m_lives, m_points, m_level, getWindowSize());
+	m_paddle = std::make_unique<Paddle>(paddle_texture, level_config.getPaddleSpeed());
+	m_ball = std::make_unique<Ball>(ball_texture, level_config.getBallSpeed());
+	m_background = std::make_unique<Background>(background_texture, window_size);
+	m_hud = std::make_unique<HeadsUpDisplay>(hud_font, m_lives, m_points, m_level, getWindowSize());
 }
 
 void LevelScene::setupHUD()

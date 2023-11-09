@@ -120,13 +120,13 @@
     <ClCompile Include="HeadsUpDisplay.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="IMovable.cpp">
+    <ClCompile Include="MovableObject2D.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="ImpenetrableBrick.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="IRenderObject.cpp">
+    <ClCompile Include="IRenderable.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="NormalBrick.cpp">
@@ -153,9 +153,6 @@
     <ClCompile Include="BrickType.cpp">
       <Filter>Source Files\Config</Filter>
     </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>Source Files\Assets</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -166,6 +163,21 @@
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureAsset.cpp">
+      <Filter>Source Files\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderableTexture.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionedObject2D.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionedTexture2D.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="MovableTexture2D.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -224,10 +236,10 @@
     <ClInclude Include="HeadsUpDisplay.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="IMovable.h">
+    <ClInclude Include="MovableObject2D.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderObject.h">
+    <ClInclude Include="IRenderable.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="NormalBrick.h">
@@ -257,9 +269,6 @@
     <ClInclude Include="BrickType.h">
       <Filter>Header Files\Config</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -270,6 +279,21 @@
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureAsset.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderableTexture.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionedObject2D.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MovableTexture2D.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionedTexture2D.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>

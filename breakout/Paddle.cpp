@@ -1,13 +1,10 @@
 #include "Paddle.h"
-#include "ImageAsset.h"
 
 #include <stdexcept>
 #include <iostream>
 
-Paddle::Paddle(TextureManager& texture_manager, const std::string& paddle_texture, const float speed)
+Paddle::Paddle(TextureAsset& texture, const float speed) : MovableTexture2D(texture)
 {
-	auto texture = texture_manager.getTexturePtr(paddle_texture);
-	setTexture(texture);
 	setSpeed(speed);
 	setPosition(glm::vec2(400, 780));
 	setSize(glm::vec2(60, 10));
@@ -20,7 +17,7 @@ void Paddle::render(SDL_Renderer* renderer)
 
 	rect = { getPosition().x - getSize().x / 2, getPosition().y - getSize().y / 2, getSize().x, getSize().y};
 
-	SDL_RenderCopyF(renderer, getTexture(), NULL, &rect);
+	SDL_RenderCopyF(renderer, getTextureAsset().getTexture(), NULL, &rect);
 }
 
 void Paddle::moveRight(float delta)
