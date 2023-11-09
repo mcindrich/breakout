@@ -163,6 +163,7 @@
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SFXAsset.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIScene.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SFXAsset.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIScene.h" />

@@ -14,7 +14,7 @@
 #include <sstream>
 #include <iostream>
 
-LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(level), m_points(0), m_lives(3)
+LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(level), m_points(0), m_lives(3), m_state(LevelState::Starting)
 {
 	loadLevelConfigurationAsset(level);
 	loadBackgroundAsset();
@@ -25,7 +25,6 @@ LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(l
 	loadFontAssets();
 	createGameObjects();
 	generateBricks();
-	setupStartTimer();
 	setupHUD();
 }
 
@@ -54,8 +53,16 @@ void LevelScene::update(float delta)
 	{
 		m_paddle->moveRight(delta);
 	}
+	if (state[SDL_SCANCODE_SPACE]) {
+		// start the game if not already started
+		m_state = LevelState::Playing;
+	}
 
-	m_ball->updatePosition(delta);
+	if (m_state == LevelState::Playing) {
+		m_ball->updatePosition(delta);
+
+		// check for collisions
+	}
 }
 
 void LevelScene::render(SDL_Renderer* renderer)
@@ -230,13 +237,6 @@ void LevelScene::createGameObjects()
 	m_ball = std::make_unique<Ball>(m_textureManager, level_config.getBallTexture(), level_config.getBallSpeed());
 	m_background = std::make_unique<Background>(m_textureManager, level_config.getBackgroundTexture(), window_size);
 	m_hud = std::make_unique<HeadsUpDisplay>(m_assetManager, m_lives, m_points, m_level, getWindowSize());
-}
-
-void LevelScene::setupStartTimer()
-{
-	// initial count
-	m_startTimer.restart();
-	m_startCounter = 0;
 }
 
 void LevelScene::setupHUD()

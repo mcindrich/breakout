@@ -26,6 +26,12 @@ public:
     virtual void render(SDL_Renderer* renderer) override;
 
 private:
+    enum class LevelState {
+        Starting,
+        Playing,
+        Ended
+    };
+
     friend class Game;
 
     // initialization helpers
@@ -38,7 +44,6 @@ private:
     void loadFontAssets();
     void generateBricks();
     void createGameObjects();
-    void setupStartTimer();
     void setupHUD();
 
     // rendering helpers
@@ -48,27 +53,26 @@ private:
     void renderBall(SDL_Renderer* renderer);
     void renderHUD(SDL_Renderer* renderer);
 
+    // window helpers
     glm::ivec2 getWindowSize();
 
-    AssetManager m_assetManager;
+    AssetManager m_assetManager; // handles loading of all assets (images, fonts, sounds etc.)
 
     TextureManager m_textureManager; // handles loading of textures - loads textures only once instead of for example every brick having its own texture
 
-    std::string m_levelBackground; // Level background path extracted from level configuration
-
-    // main game objects - paddle, ball and bricks
+    // main game objects - paddle, ball, background, bricks and HUD
     std::unique_ptr<Paddle> m_paddle;
     std::unique_ptr<Ball> m_ball;
     std::unique_ptr<Background> m_background;
     std::unique_ptr<HeadsUpDisplay> m_hud;
     std::vector<std::vector<std::unique_ptr<Brick>>> m_bricks;
 
-    Timer m_startTimer;
-    unsigned int m_startCounter;
-
-    // HUD data providers
+    // HUD data
     unsigned int m_level;
     unsigned int m_points;
     unsigned int m_lives;
+
+    // level state
+    LevelState m_state;
 };
 

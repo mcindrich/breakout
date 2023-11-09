@@ -165,6 +165,9 @@
     <ClCompile Include="LevelConfigurationAsset.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\imgui\src\imstb_truetype.h">
@@ -265,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="LevelConfigurationAsset.h">
       <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
