@@ -1,11 +1,16 @@
 #include "ImpenetrableBrick.h"
 
-ImpenetrableBrick::ImpenetrableBrick(TextureAsset& texture, BrickType& bt, glm::vec2 position, glm::vec2 size) 
-	: Brick(texture, position, size, bt.getHitPoints())
+ImpenetrableBrick::ImpenetrableBrick(TextureAsset& texture, SFXAsset& hit_sound, BrickType& bt, glm::vec2 position, glm::vec2 size)
+	: Brick(texture, hit_sound, position, size, bt.getHitPoints())
 {
 }
 
-void ImpenetrableBrick::hit()
+unsigned int ImpenetrableBrick::getBreakScore() const
 {
-	// don't do anything for this brick
+	return 0;
+}
+
+void ImpenetrableBrick::hitEvent()
+{
+	// don't do anything for this brick - it can't be damaged
 }

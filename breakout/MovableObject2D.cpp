@@ -1,5 +1,7 @@
 #include "MovableObject2D.h"
 
+#include <iostream>
+
 float MovableObject2D::getSpeed() const
 {
     return m_speed;
@@ -13,7 +15,7 @@ glm::vec2 MovableObject2D::getDirection() const
 void MovableObject2D::updatePosition(float delta)
 {
     setPosition(getPosition() + (getDirection() * getSpeed() * delta));
-}
+ }
 
 void MovableObject2D::setSpeed(float speed)
 {
@@ -22,5 +24,5 @@ void MovableObject2D::setSpeed(float speed)
 
 void MovableObject2D::setDirection(glm::vec2 direction)
 {
-    m_direction = glm::normalize(direction);
+    m_direction = direction;
 }

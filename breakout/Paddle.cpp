@@ -6,18 +6,8 @@
 Paddle::Paddle(TextureAsset& texture, const float speed) : MovableTexture2D(texture)
 {
 	setSpeed(speed);
-	setPosition(glm::vec2(400, 700));
 	setSize(glm::vec2(60, 10));
-}
-
-void Paddle::render(SDL_Renderer* renderer)
-{
-	// render on position
-	SDL_FRect rect;
-
-	rect = { getPosition().x - getSize().x / 2, getPosition().y - getSize().y / 2, getSize().x, getSize().y};
-
-	SDL_RenderCopyF(renderer, getTextureAsset().getTexture(), NULL, &rect);
+	setPosition(glm::vec2(400, 700));
 }
 
 void Paddle::moveRight(float delta)

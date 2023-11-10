@@ -10,8 +10,6 @@ class Ball
 public:
 	Ball(TextureAsset& texture, const float speed);
 
-	virtual void render(SDL_Renderer* renderer) override;
-
 private:
 	void generateRandomDirection();
 };

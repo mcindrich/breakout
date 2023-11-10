@@ -27,7 +27,7 @@ void Text::render(SDL_Renderer* renderer)
 
 	// render texture at setup position
 
-	SDL_FRect rect = { getPosition().x, getPosition().y, getSize().x, getSize().y};
+	SDL_FRect rect = { getTopLeftPosition().x, getTopLeftPosition().y, getSize().x, getSize().y};
 
 	SDL_RenderCopyF(renderer, texture, NULL, &rect);
 

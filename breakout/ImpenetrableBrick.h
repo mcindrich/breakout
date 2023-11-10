@@ -9,8 +9,11 @@ class ImpenetrableBrick :
     public Brick
 {
 public:
-    ImpenetrableBrick(TextureAsset& texture, BrickType& bt, glm::vec2 position, glm::vec2 size);
+    ImpenetrableBrick(TextureAsset& texture, SFXAsset &hit_sound, BrickType& bt, glm::vec2 position, glm::vec2 size);
 
-    virtual void hit() override;
+    virtual unsigned int getBreakScore() const override;
+
+protected:
+    virtual void hitEvent() override;
 };
 

@@ -10,8 +10,6 @@ class Paddle
 public:
 	Paddle(TextureAsset &texture, const float speed);
 
-	virtual void render(SDL_Renderer* renderer) override;
-
 	void moveRight(float delta);
 	void moveLeft(float delta);
 };

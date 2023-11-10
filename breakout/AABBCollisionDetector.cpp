@@ -1,12 +1,16 @@
 #include "AABBCollisionDetector.h"
 
-bool AABBCollisionDetector::checkCollision(PositionedObject2D& o1, PositionedObject2D& o2)
+#include <iostream>
+
+bool AABBCollisionDetector::checkCollision(PositionedObject2D& A, PositionedObject2D& B)
 {
-    auto a1 = AABBObject::createFromPositionObject2D(o1);
-    auto a2 = AABBObject::createFromPositionObject2D(o2);
+    auto a_left_b = A.getRightX() < B.getLeftX();
+    auto a_right_b = A.getLeftX() > B.getRightX();
+    auto a_below_b = A.getTopY() > B.getBottomY();
+    auto a_above_b = A.getBottomY() < B.getTopY();
 
     // check collision
-    if (a1.max_x >= a2.min_x && a1.min_x <= a2.max_x && a1.max_y >= a2.min_y && a1.min_y <= a2.max_y)
+    if (!(a_left_b || a_right_b || a_below_b || a_above_b))
     {
         return true;
     }
@@ -18,8 +22,8 @@ AABBCollisionDetector::AABBObject AABBCollisionDetector::AABBObject::createFromP
 {
     AABBObject aabb;
 
-    auto top_left_x = obj.getPosition().x;
-    auto top_left_y = obj.getPosition().y;
+    auto top_left_x = obj.getTopLeftPosition().x;
+    auto top_left_y = obj.getTopLeftPosition().y;
     auto width = obj.getSize().x;
     auto height = obj.getSize().y;
 

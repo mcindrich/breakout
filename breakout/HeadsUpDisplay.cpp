@@ -10,15 +10,15 @@ HeadsUpDisplay::HeadsUpDisplay(FontAsset &font, unsigned int& lives_ref, unsigne
 {
 	auto q = window_size.x / 3 / 4;
 
-	// setup text positions
-	m_livesText.setPosition(glm::vec2(q, 0));
-	m_pointsText.setPosition(glm::vec2(5 * q, 0));
-	m_levelText.setPosition(glm::vec2(9 * q, 0));
-
 	// setup text sizes
 	m_livesText.setSize(glm::vec2(2 * window_size.x / 3 / 4, 50));
 	m_pointsText.setSize(glm::vec2(2 * window_size.x / 3 / 4, 50));
 	m_levelText.setSize(glm::vec2(2 * window_size.x / 3 / 4, 50));
+
+	// setup text positions
+	m_livesText.setPosition(glm::vec2(q, 0) + m_livesText.getSize() / 2.0f);
+	m_pointsText.setPosition(glm::vec2(5 * q, 0) + m_livesText.getSize() / 2.0f);
+	m_levelText.setPosition(glm::vec2(9 * q, 0) + m_livesText.getSize() / 2.0f);
 
 	// setup text colors
 	m_livesText.setColor(SDL_Color{ 255, 255, 255 });

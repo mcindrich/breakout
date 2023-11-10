@@ -1,5 +1,10 @@
 #include "LevelScene.h"
 #include "Game.h"
+
+// common
+#include "Common.h"
+
+// objects
 #include "Paddle.h"
 #include "Ball.h"
 #include "ImpenetrableBrick.h"
@@ -27,9 +32,9 @@ LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(le
 	loadBrickSFXAssets();
 	loadFontAssets();
 	createGameObjects();
-	generateBricks();
 	setupHUD();
 	setupRoundStartText();
+	setupWallPositionedObjects();
 }
 
 void LevelScene::processEvents()
@@ -56,6 +61,14 @@ void LevelScene::update(float delta)
 	if (state[SDL_SCANCODE_RIGHT])
 	{
 		m_paddle->moveRight(delta);
+	}
+	if (state[SDL_SCANCODE_UP])
+	{
+		m_ball->setDirection(glm::vec2(0, -1));
+	}
+	if (state[SDL_SCANCODE_DOWN])
+	{
+		m_ball->setDirection(glm::vec2(0, 1));
 	}
 	if (state[SDL_SCANCODE_SPACE]) {
 		// start the game if not already started
@@ -187,7 +200,7 @@ void LevelScene::generateBricks()
 	auto& brick_types = level_config.getBrickTypes();
 
 	// use this position to calculate positions for each brick
-	glm::vec2 brick_position(m_background->getPosition().x, m_background->getPosition().y + level_config.getRowSpacing());
+	glm::vec2 brick_position(m_background->getTopLeftPosition().x, m_background->getTopLeftPosition().y + level_config.getRowSpacing());
 
 	// use constant calculated size for each brick depending on a number of bricks and column spacing
 	const auto bricks_row_count = level_config.getColumnCount();
@@ -202,8 +215,7 @@ void LevelScene::generateBricks()
 	// generate bricks layout
 	m_bricks.reserve(level_config.getRowCount());
 	for (unsigned int i = 0; i < level_config.getRowCount(); i++) {
-		m_bricks.push_back(std::vector<std::unique_ptr<Brick>>());
-		brick_position.x = m_background->getPosition().x + (float)level_config.getColumnSpacing();
+		brick_position.x = m_background->getTopLeftPosition().x + (float)level_config.getColumnSpacing();
 		for (unsigned int j = 0; j < level_config.getColumnCount(); j++) {
 			auto& current_brick_sym = bricks_layout[i][j];
 
@@ -211,14 +223,16 @@ void LevelScene::generateBricks()
 				auto& brick_type = brick_types[current_brick_sym];
 
 				auto& brick_texture = m_assetManager.getAsset<TextureAsset>(brick_type.getBrickTextureName());
+				auto& brick_hit_sound = m_assetManager.getAsset<SFXAsset>(brick_type.getHitSoundName());
 
 				if (brick_type.isInfinite()) {
 					// add impenetrable brick to the list
-					m_bricks[i].push_back(std::make_unique<ImpenetrableBrick>(brick_texture, brick_type, brick_position, brick_size));
+					m_bricks.push_back(std::make_unique<ImpenetrableBrick>(brick_texture, brick_hit_sound, brick_type, brick_position + brick_size / 2.0f, brick_size));
 				}
 				else {
 					// add normal brick to the list
-					m_bricks[i].push_back(std::make_unique<NormalBrick>(brick_texture, brick_type, brick_position, brick_size));
+					auto& brick_break_sound = m_assetManager.getAsset<SFXAsset>(brick_type.getBreakSoundName());	
+					m_bricks.push_back(std::make_unique<NormalBrick>(brick_texture, brick_hit_sound, brick_break_sound, brick_type, brick_position + brick_size / 2.0f, brick_size));
 				}
 			}
 			brick_position.x += brick_size.x + level_config.getColumnSpacing();
@@ -255,6 +269,9 @@ void LevelScene::createGameObjects()
 
 	// setup collision detector
 	m_collisionDetector = std::make_unique<AABBCollisionDetector>();
+
+	// generate bricks after the background has been set up
+	generateBricks();
 }
 
 void LevelScene::setupHUD()
@@ -268,20 +285,108 @@ void LevelScene::setupRoundStartText()
 	auto bg_size = m_background->getSize();
 
 	// set the text in the middle
-	auto text_position = bg_pos + bg_size / 2.0f - bg_size / 4.0f;
+	auto text_position = bg_pos - bg_size / 4.0f;
 	auto text_size = glm::vec2(bg_size.x / 2.0f, 50);
 
 	m_roundStartText->setText("press space to start the game  !");
 	m_roundStartText->setColor(SDL_Color{ 255, 255, 255 });
-	m_roundStartText->setPosition(text_position);
 	m_roundStartText->setSize(text_size);
+	m_roundStartText->setPosition(text_position + text_size / 2.0f);
+}
+
+void LevelScene::setupWallPositionedObjects()
+{
+	// use background position to setup wall objects
+	// value of 10 used for width/height of vertical/horizontal walls
+	constexpr auto WALL_SIZE = 20;
+
+	auto bg_pos = m_background->getPosition();
+	auto bg_size = m_background->getSize();
+
+	auto bg_top_pos = m_background->getCenterTopPosition();
+	auto bg_bottom_pos = m_background->getCenterBottomPosition();
+	auto bg_left_pos = m_background->getCenterLeftSidePosition();
+	auto bg_right_pos = m_background->getCenterRightSidePosition();
+
+	// size and offset for left and right
+	auto vertical_size = glm::vec2(WALL_SIZE, bg_size.y);
+	auto vertical_offset = glm::vec2(WALL_SIZE, 0) / 2.0f;
+
+	// size and offset for top and bottom
+	auto horizontal_size = glm::vec2(bg_size.x, WALL_SIZE);
+	auto horizontal_offset = glm::vec2(0, WALL_SIZE) / 2.0f;
+
+	m_bottomWall.setSize(horizontal_size);
+	m_bottomWall.setPosition(bg_bottom_pos + horizontal_offset);
+
+	/*std::cout << "Bottom wall position: " << m_bottomWall.getTopLeftPosition().x << ":" << m_bottomWall.getTopLeftPosition().y << std::endl;
+	std::cout << "Bottom wall size: " << m_bottomWall.getSize().x << ":" << m_bottomWall.getSize().y << std::endl;*/
+	
+	m_topWall.setSize(horizontal_size);
+	m_topWall.setPosition(bg_top_pos - horizontal_offset);
+
+	m_leftWall.setSize(vertical_size);
+	m_leftWall.setPosition(bg_left_pos - vertical_offset);
+
+	m_rightWall.setSize(vertical_size);
+	m_rightWall.setPosition(bg_right_pos + vertical_offset);
+}
+
+void LevelScene::removeLifeAndResetObjects()
+{
+	// TODO: implement reseting of the objects
 }
 
 void LevelScene::checkCollisions()
 {
+	checkPaddleCollision();
+	checkWallCollision();
+	checkBricksCollision();
+}
+
+void LevelScene::checkPaddleCollision()
+{
 	if (m_collisionDetector->checkCollision(*m_ball, *m_paddle)) {
-		std::cout << "Collision detected" << std::endl;
-		m_ball->setDirection(glm::vec2(0.2, -1));
+		m_ball->setDirection(glm::normalize(glm::vec2(randomFloatInRange(-1.0f, 1.0f), -1)));
+	}
+}
+
+void LevelScene::checkWallCollision()
+{
+	auto ball_dir = m_ball->getDirection();
+
+	if (m_collisionDetector->checkCollision(dynamic_cast<PositionedObject2D&>(*m_ball), m_bottomWall)) {
+		// remove one life
+		// if ran out of lives - game over
+	}
+	if (m_collisionDetector->checkCollision(*m_ball, m_topWall)) {
+		// won the game - go to next level
+		std::cout << "COLLIDED WITH TOP WALL" << std::endl;
+	}
+	if (m_collisionDetector->checkCollision(*m_ball, m_leftWall) || m_collisionDetector->checkCollision(*m_ball, m_rightWall)) {
+		// leave direction Y, change X to other side
+		m_ball->setDirection(glm::normalize(glm::vec2(ball_dir.x * -1, ball_dir.y)));
+	}
+}
+
+void LevelScene::checkBricksCollision()
+{
+	for (auto& brick : m_bricks) {
+		if (!brick->isBroken()) {
+			if (m_collisionDetector->checkCollision(*m_ball, *brick)) {
+				m_ball->setDirection(glm::normalize(glm::vec2(randomFloatInRange(-1.0f, 1.0f), 1)));
+				brick->hit();
+
+				// if the brick has just been broken - add the break score to the level points
+				// only normal brick can be broken - valid cast
+				if (brick->isBroken()) {
+					auto normal_brick = dynamic_cast<NormalBrick&>(*brick);
+					auto break_score = normal_brick.getBreakScore();
+
+					m_points += break_score;
+				}
+			}
+		}
 	}
 }
 
@@ -292,9 +397,9 @@ void LevelScene::renderLevelBackground(SDL_Renderer* renderer)
 
 void LevelScene::renderLevelBricks(SDL_Renderer* renderer)
 {
-	for (auto& i : m_bricks) {
-		for (auto& j : i) {
-			j->render(renderer);
+	for (auto& brick : m_bricks) {
+		if (!brick->isBroken()) {
+			brick->render(renderer);
 		}
 	}
 }

@@ -9,7 +9,7 @@ void MovableTexture2D::render(SDL_Renderer* renderer)
 	// render on position
 	SDL_FRect rect;
 
-	rect = { getPosition().x, getPosition().y, getSize().x, getSize().y };
+	rect = { getTopLeftPosition().x, getTopLeftPosition().y, getSize().x, getSize().y };
 
 	SDL_RenderCopyF(renderer, getTextureAsset().getTexture(), NULL, &rect);
 }

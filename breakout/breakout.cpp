@@ -11,6 +11,8 @@
 
 #include "Game.h"
 
+#include <cstdlib>
+
 // SDL2main fix
 #undef main
 
@@ -45,6 +47,9 @@ int main()
 		std::printf("SDL_ttf init error: %s\n", TTF_GetError());
 		return -1;
 	}
+
+	// init rand seed
+	std::srand(std::time(NULL));
 
 	window = SDL_CreateWindow("breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, 0);
 	if (!window) {

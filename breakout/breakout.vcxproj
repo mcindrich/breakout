@@ -140,6 +140,7 @@
     <ClCompile Include="breakout.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickType.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="deps\imgui\src\imgui.cpp" />
     <ClCompile Include="deps\imgui\src\imgui_demo.cpp" />
     <ClCompile Include="deps\imgui\src\imgui_draw.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BrickType.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="deps\imgui\src\imconfig.h" />
     <ClInclude Include="deps\imgui\src\imgui.h" />
     <ClInclude Include="deps\imgui\src\imgui_impl_sdl2.h" />

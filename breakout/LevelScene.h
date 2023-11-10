@@ -46,7 +46,16 @@ private:
     void createGameObjects();
     void setupHUD();
     void setupRoundStartText();
+    void setupWallPositionedObjects();
+
+    // level manipulation
+    void removeLifeAndResetObjects();
+
+    // collision handling
     void checkCollisions();
+    void checkPaddleCollision();
+    void checkWallCollision();
+    void checkBricksCollision();
 
     // rendering helpers
     void renderLevelBackground(SDL_Renderer* renderer);
@@ -66,7 +75,7 @@ private:
     std::unique_ptr<Ball> m_ball;
     std::unique_ptr<Background> m_background;
     std::unique_ptr<HeadsUpDisplay> m_hud;
-    std::vector<std::vector<std::unique_ptr<Brick>>> m_bricks;
+    std::vector<std::unique_ptr<Brick>> m_bricks;
 
     // HUD data
     unsigned int m_level;
@@ -79,6 +88,13 @@ private:
     // text before starting a round
     std::unique_ptr<Text> m_roundStartText;
 
+    // collision detector between objects
     std::unique_ptr<ICollisionDetector> m_collisionDetector;
+
+    // invisible wall objects used for checking ball collision
+    PositionedObject2D m_topWall;
+    PositionedObject2D m_bottomWall;
+    PositionedObject2D m_leftWall;
+    PositionedObject2D m_rightWall;
 };
 
