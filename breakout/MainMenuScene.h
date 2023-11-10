@@ -1,7 +1,6 @@
 #pragma once
-#include "UIScene.h"
 
-#include <imgui.h>
+#include "UIScene.h"
 
 class MainMenuScene :
     public UIScene

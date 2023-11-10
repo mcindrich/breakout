@@ -6,7 +6,7 @@
 Paddle::Paddle(TextureAsset& texture, const float speed) : MovableTexture2D(texture)
 {
 	setSpeed(speed);
-	setPosition(glm::vec2(400, 780));
+	setPosition(glm::vec2(400, 700));
 	setSize(glm::vec2(60, 10));
 }
 

@@ -11,7 +11,6 @@ public:
 	glm::vec2 getPosition() const;
 	glm::vec2 getSize() const;
 
-protected:
 	void setPosition(glm::vec2 position);
 	void setSize(glm::vec2 size);
 

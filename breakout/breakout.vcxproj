@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABBCollisionDetector.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
@@ -151,11 +152,12 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HeadsUpDisplay.cpp" />
     <ClCompile Include="IAsset.cpp" />
+    <ClCompile Include="ICollisionDetector.cpp" />
     <ClCompile Include="ImageAsset.cpp" />
     <ClCompile Include="MovableObject2D.cpp" />
     <ClCompile Include="ImpenetrableBrick.cpp" />
     <ClCompile Include="IRenderable.cpp" />
-    <ClCompile Include="IScene.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="LevelConfigurationAsset.cpp" />
     <ClCompile Include="LevelScene.cpp" />
     <ClCompile Include="MainMenuScene.cpp" />
@@ -173,6 +175,7 @@
     <ClCompile Include="UIScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABBCollisionDetector.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
@@ -191,11 +194,12 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="HeadsUpDisplay.h" />
     <ClInclude Include="IAsset.h" />
+    <ClInclude Include="ICollisionDetector.h" />
     <ClInclude Include="ImageAsset.h" />
     <ClInclude Include="MovableObject2D.h" />
     <ClInclude Include="ImpenetrableBrick.h" />
     <ClInclude Include="IRenderable.h" />
-    <ClInclude Include="IScene.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="LevelConfigurationAsset.h" />
     <ClInclude Include="LevelScene.h" />
     <ClInclude Include="MainMenuScene.h" />

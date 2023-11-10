@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IScene.h"
+#include "Scene.h"
 #include "AssetManager.h"
 #include "Paddle.h"
 #include "Ball.h"
@@ -8,12 +8,13 @@
 #include "Brick.h"
 #include "Timer.h"
 #include "HeadsUpDisplay.h"
+#include "ICollisionDetector.h"
 
 #include <vector>
 #include <memory>
 
 class LevelScene :
-    public IScene
+    public Scene
 {
 public:
     LevelScene(Game &game, unsigned int level);
@@ -44,6 +45,8 @@ private:
     void generateBricks();
     void createGameObjects();
     void setupHUD();
+    void setupRoundStartText();
+    void checkCollisions();
 
     // rendering helpers
     void renderLevelBackground(SDL_Renderer* renderer);
@@ -51,6 +54,7 @@ private:
     void renderPaddle(SDL_Renderer* renderer);
     void renderBall(SDL_Renderer* renderer);
     void renderHUD(SDL_Renderer* renderer);
+    void renderRoundStartText(SDL_Renderer* renderer);
 
     // window helpers
     glm::ivec2 getWindowSize();
@@ -71,5 +75,10 @@ private:
 
     // level state
     LevelState m_state;
+
+    // text before starting a round
+    std::unique_ptr<Text> m_roundStartText;
+
+    std::unique_ptr<ICollisionDetector> m_collisionDetector;
 };
 

@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-#include "IScene.h"
+#include "Scene.h"
 
 class SceneManager
 {
@@ -15,18 +15,18 @@ public:
 	template <typename SceneType>
 	void addScene(const std::string &name, Game& game);
 
-	void addScene(const std::string& name, IScene* scene);
+	void addScene(const std::string& name, Scene* scene);
 
 	template<typename SceneType>
 	SceneType& getScene(const std::string& name);
 
 	void setCurrentScene(const std::string& name);
 
-	std::unique_ptr<IScene> &getCurrentScene();
+	std::unique_ptr<Scene> &getCurrentScene();
 
 
 private:
-	std::map<std::string, std::unique_ptr<IScene>> m_scenes;
+	std::map<std::string, std::unique_ptr<Scene>> m_scenes;
 	std::string m_currentScene;
 };
 

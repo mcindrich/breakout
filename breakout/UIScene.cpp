@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-UIScene::UIScene(Game& game) : IScene(game)
+UIScene::UIScene(Game& game) : Scene(game)
 {
 }
 

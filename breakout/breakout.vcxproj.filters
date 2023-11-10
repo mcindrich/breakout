@@ -135,7 +135,7 @@
     <ClCompile Include="Paddle.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="IScene.cpp">
+    <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="LevelScene.cpp">
@@ -179,6 +179,12 @@
     </ClCompile>
     <ClCompile Include="MovableTexture2D.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ICollisionDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AABBCollisionDetector.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,7 +257,7 @@
     <ClInclude Include="ImpenetrableBrick.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="IScene.h">
+    <ClInclude Include="Scene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="LevelScene.h">
@@ -295,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="PositionedTexture2D.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollisionDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AABBCollisionDetector.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,10 +11,13 @@
 #include "SFXAsset.h"
 #include "TextureAsset.h"
 
+// collision
+#include "AABBCollisionDetector.h"
+
 #include <sstream>
 #include <iostream>
 
-LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(level), m_points(0), m_lives(3), m_state(LevelState::Starting)
+LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(level), m_points(0), m_lives(3), m_state(LevelState::Starting)
 {
 	loadLevelConfigurationAsset(level);
 	loadBackgroundAsset();
@@ -26,6 +29,7 @@ LevelScene::LevelScene(Game& game, unsigned int level) : IScene(game), m_level(l
 	createGameObjects();
 	generateBricks();
 	setupHUD();
+	setupRoundStartText();
 }
 
 void LevelScene::processEvents()
@@ -62,6 +66,7 @@ void LevelScene::update(float delta)
 		m_ball->updatePosition(delta);
 
 		// check for collisions
+		checkCollisions();
 	}
 }
 
@@ -72,6 +77,7 @@ void LevelScene::render(SDL_Renderer* renderer)
 	renderBall(renderer);
 	renderPaddle(renderer);
 	renderHUD(renderer);
+	renderRoundStartText(renderer);
 }
 
 void LevelScene::loadLevelConfigurationAsset(unsigned int level)
@@ -169,7 +175,8 @@ void LevelScene::loadBrickSFXAssets()
 
 void LevelScene::loadFontAssets()
 {
-	m_assetManager.loadAsset<FontAsset>("./assets/fonts/Roboto-Regular.ttf", "HUDFont", 50);
+	m_assetManager.loadAsset<FontAsset>("./assets/fonts/Roboto-Bold.ttf", "HUDFont", 100);
+	m_assetManager.loadAsset<FontAsset>("./assets/fonts/ARCADECLASSIC.ttf", "TextFont", 100);
 }
 
 void LevelScene::generateBricks()
@@ -236,18 +243,46 @@ void LevelScene::createGameObjects()
 	auto &background_texture = m_assetManager.getAsset<TextureAsset>(level_config.getBackgroundTexture());
 
 	// get fonts
-	auto hud_font = m_assetManager.getAsset<FontAsset>("HUDFont");
+	auto& hud_font = m_assetManager.getAsset<FontAsset>("HUDFont");
+	auto& text_font = m_assetManager.getAsset<FontAsset>("TextFont");
 
 	// create game objects
 	m_paddle = std::make_unique<Paddle>(paddle_texture, level_config.getPaddleSpeed());
 	m_ball = std::make_unique<Ball>(ball_texture, level_config.getBallSpeed());
 	m_background = std::make_unique<Background>(background_texture, window_size);
 	m_hud = std::make_unique<HeadsUpDisplay>(hud_font, m_lives, m_points, m_level, getWindowSize());
+	m_roundStartText = std::make_unique<Text>(text_font);
+
+	// setup collision detector
+	m_collisionDetector = std::make_unique<AABBCollisionDetector>();
 }
 
 void LevelScene::setupHUD()
 {
 
+}
+
+void LevelScene::setupRoundStartText()
+{
+	auto bg_pos = m_background->getPosition();
+	auto bg_size = m_background->getSize();
+
+	// set the text in the middle
+	auto text_position = bg_pos + bg_size / 2.0f - bg_size / 4.0f;
+	auto text_size = glm::vec2(bg_size.x / 2.0f, 50);
+
+	m_roundStartText->setText("press space to start the game  !");
+	m_roundStartText->setColor(SDL_Color{ 255, 255, 255 });
+	m_roundStartText->setPosition(text_position);
+	m_roundStartText->setSize(text_size);
+}
+
+void LevelScene::checkCollisions()
+{
+	if (m_collisionDetector->checkCollision(*m_ball, *m_paddle)) {
+		std::cout << "Collision detected" << std::endl;
+		m_ball->setDirection(glm::vec2(0.2, -1));
+	}
 }
 
 void LevelScene::renderLevelBackground(SDL_Renderer* renderer)
@@ -277,6 +312,13 @@ void LevelScene::renderBall(SDL_Renderer* renderer)
 void LevelScene::renderHUD(SDL_Renderer* renderer)
 {
 	m_hud->render(renderer);
+}
+
+void LevelScene::renderRoundStartText(SDL_Renderer* renderer)
+{
+	if (m_state == LevelState::Starting) {
+		m_roundStartText->render(renderer);
+	}
 }
 
 glm::ivec2 LevelScene::getWindowSize()

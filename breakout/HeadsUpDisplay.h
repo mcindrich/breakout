@@ -2,7 +2,7 @@
 
 #include "IRenderable.h"
 #include "AssetManager.h"
-#include "FontAsset.h"
+#include "Text.h"
 
 #include <glm/glm.hpp>
 
@@ -22,10 +22,9 @@ private:
     unsigned int& m_livesRef;
     unsigned int& m_pointsRef;
     unsigned int& m_levelRef;
-    FontAsset& m_font;
 
-    glm::vec2 m_livesTextPosition;
-    glm::vec2 m_pointsTextPosition;
-    glm::vec2 m_levelTextPosition;
+    Text m_livesText;
+    Text m_pointsText;
+    Text m_levelText;
 };
 

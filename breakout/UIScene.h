@@ -1,11 +1,11 @@
 #pragma once
 
-#include "IScene.h"
+#include "Scene.h"
 
 #include <string>
 
 class UIScene :
-    public IScene
+    public Scene
 {
 public:
     UIScene(Game& game);

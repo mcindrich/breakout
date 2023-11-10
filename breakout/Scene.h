@@ -4,10 +4,10 @@
 
 class Game;
 
-class IScene
+class Scene
 {
 public:
-	IScene(Game& game);
+	Scene(Game& game);
 
 	virtual void processEvents() = 0;
 
