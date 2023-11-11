@@ -10,6 +10,8 @@ class Ball
 public:
 	Ball(TextureAsset& texture, const float speed);
 
+	void reset();
+
 private:
 	void generateRandomDirection();
 };

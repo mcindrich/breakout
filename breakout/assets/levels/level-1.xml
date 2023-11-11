@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Level
-	RowCount="3"
+	RowCount="3" 
 	ColumnCount="20"
 	RowSpacing="3"
 	ColumnSpacing="3"
-	BackgroundTexture="boards/board-01.dds">
+	BackgroundTexture="backgrounds/background.png"
+	PaddleTexture="paddles/paddle.png"
+	BallTexture="balls/ball.png"
+	PaddleSpeed="500"
+	BallSpeed="400">
 	<BrickTypes>
 		<!-- Soft Brick -->
 		<BrickType
 		 Id="S"
-		 Texture="bricks/soft.dds"
+		 Texture="bricks/brick-01.png"
 		 HitPoints="1"
-		 HitSound="Hit_01.wav"
-		 BreakSound="Break_01.wav"
+		 HitSound="hit-01.wav"
+		 BreakSound="break-01.wav"
 		 BreakScore="50" />
 		<!-- Medium Brick -->
 		<BrickType
 		 Id="M"
-		 Texture="bricks/medium.dds"
+		 Texture="bricks/brick-02.png"
 		 HitPoints="2"
-		 HitSound="Sounds/Hit_02.wav"
-		 BreakSound="Sounds/Break_02.wav"
+		 HitSound="hit-01.wav"
+		 BreakSound="break-01.wav"
 		 BreakScore="100" />
 		<!-- Hard Brick -->
 		<BrickType
 		 Id="H"
-		 Texture="Textures/Bricks/Hard.dds"
+		 Texture="bricks/brick-03.png"
 		 HitPoints="3"
-		 HitSound="Sounds/Hit_03.wav"
-		 BreakSound="Sounds/Break_03.wav"
+		 HitSound="hit-01.wav"
+		 BreakSound="break-01.wav"
 		 BreakScore="150" />
 		<!-- Impenetrable Brick -->
 		<BrickType
 		 Id="I"
-		 Texture="Textures/Bricks/Impenetrable.dds"
+		 Texture="bricks/brick-04.png"
 		 HitPoints="Infinite"
-		 HitSound="Sounds/Hit_04.wav" />
+		 HitSound="hit-01.wav" />
 	</BrickTypes>
 	<Bricks>
-		H H H H H H H H H H H H H H H H H H H H
-		M M I I M M _ _ M M M M _ _ M M I I M M
-		S S S S S S S S S S S S S S S S S S S S
+		HHHHHHHH________HHHH
+		MMIIMM__________IIMM
+		SSSSSSSS________SSSS
 	</Bricks>
 </Level>

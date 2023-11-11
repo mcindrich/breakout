@@ -44,7 +44,7 @@ void MainMenuScene::update(float delta)
     
     if (UIDrawButtonCentered("Play"))
     {
-        getGameRef().setCurrentScene("Level0Scene");
+        getGameRef().setCurrentScene("Level1Scene");
     }
     if (UIDrawButtonCentered("Quit"))
     {

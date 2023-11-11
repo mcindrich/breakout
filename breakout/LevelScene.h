@@ -29,6 +29,7 @@ private:
     enum class LevelState {
         Starting,
         Playing,
+        GameOver,
         Ended
     };
 
@@ -44,12 +45,16 @@ private:
     void loadFontAssets();
     void generateBricks();
     void createGameObjects();
-    void setupHUD();
     void setupRoundStartText();
+    void setupGameOverText();
+    void setupLevelPassedText();
     void setupWallPositionedObjects();
 
     // level manipulation
     void removeLifeAndResetObjects();
+    void setupAdvancingToNextLevel();
+    void advanceToNextLevel();
+    void resetLevel();
 
     // collision handling
     void checkCollisions();
@@ -64,6 +69,8 @@ private:
     void renderBall(SDL_Renderer* renderer);
     void renderHUD(SDL_Renderer* renderer);
     void renderRoundStartText(SDL_Renderer* renderer);
+    void renderGameOverText(SDL_Renderer* renderer);
+    void renderLevelPassedText(SDL_Renderer* renderer);
 
     // window helpers
     glm::ivec2 getWindowSize();
@@ -87,6 +94,12 @@ private:
 
     // text before starting a round
     std::unique_ptr<Text> m_roundStartText;
+
+    // text for game over
+    std::unique_ptr<Text> m_gameOverText;
+
+    // text for when the level is won
+    std::unique_ptr<Text> m_levelPassedText;
 
     // collision detector between objects
     std::unique_ptr<ICollisionDetector> m_collisionDetector;

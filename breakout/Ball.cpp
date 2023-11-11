@@ -7,8 +7,12 @@ Ball::Ball(TextureAsset& texture, const float speed) : MovableTexture2D(texture)
 {
 	setSpeed(speed);
 	setSize(glm::vec2(10, 10));
+	reset();
+}
+
+void Ball::reset()
+{
 	setPosition(glm::vec2(400, 650));
-	setDirection(glm::vec2(0, 0));
 
 	// generate starting random direction
 	generateRandomDirection();

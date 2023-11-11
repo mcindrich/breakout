@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Level
-	RowCount="3" 
+	RowCount="3"
 	ColumnCount="20"
 	RowSpacing="3"
 	ColumnSpacing="3"
@@ -8,7 +8,7 @@
 	PaddleTexture="paddles/paddle.png"
 	BallTexture="balls/ball.png"
 	PaddleSpeed="500"
-	BallSpeed="200">
+	BallSpeed="400">
 	<BrickTypes>
 		<!-- Soft Brick -->
 		<BrickType

@@ -316,10 +316,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="assets\levels\level-0.xml">
+    <Xml Include="assets\levels\level-1.xml">
       <Filter>Resource Files\levels</Filter>
     </Xml>
-    <Xml Include="assets\levels\level-1.xml">
+    <Xml Include="assets\levels\level-2.xml">
       <Filter>Resource Files\levels</Filter>
     </Xml>
   </ItemGroup>

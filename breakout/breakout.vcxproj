@@ -219,8 +219,8 @@
     <ClInclude Include="UIScene.h" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="assets\levels\level-0.xml" />
     <Xml Include="assets\levels\level-1.xml" />
+    <Xml Include="assets\levels\level-2.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

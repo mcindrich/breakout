@@ -19,6 +19,7 @@ public:
     unsigned int getHealth() const;
     
     void hit();
+    void reset();
 
     virtual unsigned int getBreakScore() const = 0;
 
@@ -28,6 +29,7 @@ protected:
     void decrHealth();
 
 private:
+    unsigned int m_initialHealth;
     unsigned int m_health;
     SFXAsset& m_hitSound;
 };

@@ -24,6 +24,8 @@ public:
 
 	void setCurrentScene(const std::string& scene_name);
 
+	SceneManager &getSceneManager();
+
 	~Game();
 
 private:

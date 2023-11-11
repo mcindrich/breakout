@@ -10,6 +10,11 @@ Paddle::Paddle(TextureAsset& texture, const float speed) : MovableTexture2D(text
 	setPosition(glm::vec2(400, 700));
 }
 
+void Paddle::reset()
+{
+	setPosition(glm::vec2(400, 700));
+}
+
 void Paddle::moveRight(float delta)
 {
 	// set direction for moving

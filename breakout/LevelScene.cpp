@@ -24,6 +24,7 @@
 
 LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(level), m_points(0), m_lives(3), m_state(LevelState::Starting)
 {
+	// load all assets
 	loadLevelConfigurationAsset(level);
 	loadBackgroundAsset();
 	loadPaddleTextureAsset();
@@ -31,9 +32,16 @@ LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(le
 	loadBrickTextureAssets();
 	loadBrickSFXAssets();
 	loadFontAssets();
+
+	// create all objects by giving them the ref to needed assets
 	createGameObjects();
-	setupHUD();
+
+	// setup all text data
 	setupRoundStartText();
+	setupGameOverText();
+	setupLevelPassedText();
+
+	// setup invisible wall objects used for wall collision detection
 	setupWallPositionedObjects();
 }
 
@@ -46,6 +54,24 @@ void LevelScene::processEvents()
 		switch (event.type) {
 		case SDL_QUIT:
 			getGameRef().stopRunning();
+			break;
+		case SDL_KEYDOWN:
+			if (event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
+				// start the game if not already started
+				switch (m_state) {
+				case LevelState::Starting:
+					m_state = LevelState::Playing;
+					break;
+				case LevelState::GameOver:
+					resetLevel();
+					break;
+				case LevelState::Ended:
+					advanceToNextLevel();
+					break;
+				default:
+					break;
+				}
+			}
 			break;
 		}
 	}
@@ -71,8 +97,6 @@ void LevelScene::update(float delta)
 		m_ball->setDirection(glm::vec2(0, 1));
 	}
 	if (state[SDL_SCANCODE_SPACE]) {
-		// start the game if not already started
-		m_state = LevelState::Playing;
 	}
 
 	if (m_state == LevelState::Playing) {
@@ -91,6 +115,8 @@ void LevelScene::render(SDL_Renderer* renderer)
 	renderPaddle(renderer);
 	renderHUD(renderer);
 	renderRoundStartText(renderer);
+	renderGameOverText(renderer);
+	renderLevelPassedText(renderer);
 }
 
 void LevelScene::loadLevelConfigurationAsset(unsigned int level)
@@ -265,7 +291,11 @@ void LevelScene::createGameObjects()
 	m_ball = std::make_unique<Ball>(ball_texture, level_config.getBallSpeed());
 	m_background = std::make_unique<Background>(background_texture, window_size);
 	m_hud = std::make_unique<HeadsUpDisplay>(hud_font, m_lives, m_points, m_level, getWindowSize());
+
+	// text objects
 	m_roundStartText = std::make_unique<Text>(text_font);
+	m_gameOverText = std::make_unique<Text>(text_font);
+	m_levelPassedText = std::make_unique<Text>(text_font);
 
 	// setup collision detector
 	m_collisionDetector = std::make_unique<AABBCollisionDetector>();
@@ -274,24 +304,49 @@ void LevelScene::createGameObjects()
 	generateBricks();
 }
 
-void LevelScene::setupHUD()
-{
-
-}
-
 void LevelScene::setupRoundStartText()
 {
 	auto bg_pos = m_background->getPosition();
 	auto bg_size = m_background->getSize();
 
 	// set the text in the middle
-	auto text_position = bg_pos - bg_size / 4.0f;
-	auto text_size = glm::vec2(bg_size.x / 2.0f, 50);
+	auto text_position = bg_pos;
+	auto text_size = glm::vec2(bg_size.x - bg_size.x / 4, 50);
 
 	m_roundStartText->setText("press space to start the game  !");
 	m_roundStartText->setColor(SDL_Color{ 255, 255, 255 });
 	m_roundStartText->setSize(text_size);
-	m_roundStartText->setPosition(text_position + text_size / 2.0f);
+	m_roundStartText->setPosition(text_position);
+}
+
+void LevelScene::setupGameOverText()
+{
+	auto bg_pos = m_background->getPosition();
+	auto bg_size = m_background->getSize();
+
+	// set the text in the middle
+	auto text_position = bg_pos;
+	auto text_size = glm::vec2(bg_size.x - bg_size.x / 10.0f, 50);
+
+	m_gameOverText->setText("Game over  !  Press space to restart the game  !");
+	m_gameOverText->setColor(SDL_Color{ 255, 255, 255 });
+	m_gameOverText->setSize(text_size);
+	m_gameOverText->setPosition(text_position);
+}
+
+void LevelScene::setupLevelPassedText()
+{
+	auto bg_pos = m_background->getPosition();
+	auto bg_size = m_background->getSize();
+
+	// set the text in the middle
+	auto text_position = bg_pos;
+	auto text_size = glm::vec2(bg_size.x - bg_size.x / 10.0f, 50);
+
+	m_levelPassedText->setText("Level passed ! Press space to advance to the next level !");
+	m_levelPassedText->setColor(SDL_Color{ 255, 255, 255 });
+	m_levelPassedText->setSize(text_size);
+	m_levelPassedText->setPosition(text_position);
 }
 
 void LevelScene::setupWallPositionedObjects()
@@ -318,9 +373,6 @@ void LevelScene::setupWallPositionedObjects()
 
 	m_bottomWall.setSize(horizontal_size);
 	m_bottomWall.setPosition(bg_bottom_pos + horizontal_offset);
-
-	/*std::cout << "Bottom wall position: " << m_bottomWall.getTopLeftPosition().x << ":" << m_bottomWall.getTopLeftPosition().y << std::endl;
-	std::cout << "Bottom wall size: " << m_bottomWall.getSize().x << ":" << m_bottomWall.getSize().y << std::endl;*/
 	
 	m_topWall.setSize(horizontal_size);
 	m_topWall.setPosition(bg_top_pos - horizontal_offset);
@@ -335,6 +387,59 @@ void LevelScene::setupWallPositionedObjects()
 void LevelScene::removeLifeAndResetObjects()
 {
 	// TODO: implement reseting of the objects
+	m_lives--;
+
+	if (m_lives == 0) {
+		// game over - show game over text
+		m_state = LevelState::GameOver;
+	}
+	else {
+		m_state = LevelState::Starting;
+	}
+
+	// reset ball, paddle and starting text
+	m_ball->reset();
+	m_paddle->reset();
+}
+
+void LevelScene::setupAdvancingToNextLevel()
+{
+	m_state = LevelState::Ended;
+}
+
+void LevelScene::advanceToNextLevel()
+{
+	// push new scene to the scene manager and set it as current
+	auto next_level = m_level + 1;
+	std::stringstream level_ss;
+
+	level_ss << "Level" << next_level << "Scene";
+
+	auto next_level_scene = level_ss.str();
+
+	auto& scene_manager = getGameRef().getSceneManager();
+
+	// add the new level to the SceneManager
+	scene_manager.addScene(next_level_scene, new LevelScene(getGameRef(), next_level));
+	scene_manager.setCurrentScene(next_level_scene);
+}
+
+void LevelScene::resetLevel()
+{
+	// reset all objects
+	m_ball->reset();
+	m_paddle->reset();
+
+	for (auto& brick : m_bricks) {
+		brick->reset();
+	}
+
+	// reset level data
+	m_points = 0;
+	m_lives = 3;
+
+	// reset level state to the start
+	m_state = LevelState::Starting;
 }
 
 void LevelScene::checkCollisions()
@@ -358,10 +463,11 @@ void LevelScene::checkWallCollision()
 	if (m_collisionDetector->checkCollision(dynamic_cast<PositionedObject2D&>(*m_ball), m_bottomWall)) {
 		// remove one life
 		// if ran out of lives - game over
+		removeLifeAndResetObjects();
 	}
 	if (m_collisionDetector->checkCollision(*m_ball, m_topWall)) {
 		// won the game - go to next level
-		std::cout << "COLLIDED WITH TOP WALL" << std::endl;
+		setupAdvancingToNextLevel();
 	}
 	if (m_collisionDetector->checkCollision(*m_ball, m_leftWall) || m_collisionDetector->checkCollision(*m_ball, m_rightWall)) {
 		// leave direction Y, change X to other side
@@ -411,7 +517,9 @@ void LevelScene::renderPaddle(SDL_Renderer* renderer)
 
 void LevelScene::renderBall(SDL_Renderer* renderer)
 {
-	m_ball->render(renderer);
+	if (m_state != LevelState::Ended) {
+		m_ball->render(renderer);
+	}
 }
 
 void LevelScene::renderHUD(SDL_Renderer* renderer)
@@ -423,6 +531,20 @@ void LevelScene::renderRoundStartText(SDL_Renderer* renderer)
 {
 	if (m_state == LevelState::Starting) {
 		m_roundStartText->render(renderer);
+	}
+}
+
+void LevelScene::renderGameOverText(SDL_Renderer* renderer)
+{
+	if (m_state == LevelState::GameOver) {
+		m_gameOverText->render(renderer);
+	}
+}
+
+void LevelScene::renderLevelPassedText(SDL_Renderer* renderer)
+{
+	if (m_state == LevelState::Ended) {
+		m_levelPassedText->render(renderer);
 	}
 }
 

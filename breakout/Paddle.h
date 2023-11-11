@@ -10,6 +10,8 @@ class Paddle
 public:
 	Paddle(TextureAsset &texture, const float speed);
 
+	void reset();
+
 	void moveRight(float delta);
 	void moveLeft(float delta);
 };

@@ -11,7 +11,7 @@
 Game::Game(SDL_Window* window, SDL_Renderer *renderer) : m_running(false), m_window(window), m_renderer(renderer)
 {
 	// initialize scenes
-	m_sceneManager.addScene("Level0Scene", new LevelScene(*this, 0));
+	m_sceneManager.addScene("Level1Scene", new LevelScene(*this, 1));
 	m_sceneManager.addScene("MainMenuScene", new MainMenuScene(*this));
 
 	// setup current scene
@@ -62,6 +62,11 @@ SDL_Renderer* Game::getRenderer()
 void Game::setCurrentScene(const std::string& scene_name)
 {
 	m_sceneManager.setCurrentScene(scene_name);
+}
+
+SceneManager& Game::getSceneManager()
+{
+	return m_sceneManager;
 }
 
 Game::~Game()
