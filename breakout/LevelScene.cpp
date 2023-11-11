@@ -486,7 +486,7 @@ void LevelScene::checkBricksCollision()
 				// if the brick has just been broken - add the break score to the level points
 				// only normal brick can be broken - valid cast
 				if (brick->isBroken()) {
-					auto normal_brick = dynamic_cast<NormalBrick&>(*brick);
+					auto &normal_brick = dynamic_cast<NormalBrick&>(*brick);
 					auto break_score = normal_brick.getBreakScore();
 
 					m_points += break_score;
