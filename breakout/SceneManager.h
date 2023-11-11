@@ -12,10 +12,8 @@ class SceneManager
 public:
 	SceneManager();
 
-	template <typename SceneType>
-	void addScene(const std::string &name, Game& game);
-
-	void addScene(const std::string& name, Scene* scene);
+	template <typename SceneType, typename... Args>
+	void addScene(const std::string &name, Game& game, Args&&... args);
 
 	template<typename SceneType>
 	SceneType& getScene(const std::string& name);
@@ -30,10 +28,10 @@ private:
 	std::string m_currentScene;
 };
 
-template<typename SceneType>
-inline void SceneManager::addScene(const std::string& name, Game& game)
+template<typename SceneType, typename ...Args>
+inline void SceneManager::addScene(const std::string& name, Game& game, Args && ...args)
 {
-	auto scene = std::make_unique<SceneType>(game);
+	auto scene = std::make_unique<SceneType>(game, std::forward<Args>(args)...);
 
 	m_scenes[name] = std::move(scene);
 }

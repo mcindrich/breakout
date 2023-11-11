@@ -451,7 +451,7 @@ void LevelScene::advanceToNextLevel()
 		auto next_level_scene = level_ss.str();
 
 		// add the new level to the SceneManager
-		scene_manager.addScene(next_level_scene, new LevelScene(getGameRef(), next_level));
+		scene_manager.addScene<LevelScene>(next_level_scene, getGameRef(), next_level);
 		scene_manager.setCurrentScene(next_level_scene);
 	}
 
