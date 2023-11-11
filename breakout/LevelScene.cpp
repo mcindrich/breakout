@@ -22,6 +22,9 @@
 #include <sstream>
 #include <iostream>
 
+// should be loaded from number of files in directory
+constexpr auto MAX_LEVEL = 3;
+
 LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(level), m_points(0), m_lives(3), m_state(LevelState::Starting)
 {
 	// load all assets
@@ -38,8 +41,9 @@ LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(le
 
 	// setup all text data
 	setupRoundStartText();
-	setupGameOverText();
+	setupLevelFailedText();
 	setupLevelPassedText();
+	setupLastLevelPassedText();
 
 	// setup invisible wall objects used for wall collision detection
 	setupWallPositionedObjects();
@@ -62,10 +66,11 @@ void LevelScene::processEvents()
 				case LevelState::Starting:
 					m_state = LevelState::Playing;
 					break;
-				case LevelState::GameOver:
+				case LevelState::LevelFailed:
 					resetLevel();
 					break;
-				case LevelState::Ended:
+				case LevelState::Finished:
+				case LevelState::FinishedLastLevel:
 					advanceToNextLevel();
 					break;
 				default:
@@ -96,8 +101,6 @@ void LevelScene::update(float delta)
 	{
 		m_ball->setDirection(glm::vec2(0, 1));
 	}
-	if (state[SDL_SCANCODE_SPACE]) {
-	}
 
 	if (m_state == LevelState::Playing) {
 		m_ball->updatePosition(delta);
@@ -115,8 +118,9 @@ void LevelScene::render(SDL_Renderer* renderer)
 	renderPaddle(renderer);
 	renderHUD(renderer);
 	renderRoundStartText(renderer);
-	renderGameOverText(renderer);
+	renderLevelFailedText(renderer);
 	renderLevelPassedText(renderer);
+	renderLastLevelFinishedText(renderer);
 }
 
 void LevelScene::loadLevelConfigurationAsset(unsigned int level)
@@ -294,8 +298,9 @@ void LevelScene::createGameObjects()
 
 	// text objects
 	m_roundStartText = std::make_unique<Text>(text_font);
-	m_gameOverText = std::make_unique<Text>(text_font);
+	m_LevelFailedText = std::make_unique<Text>(text_font);
 	m_levelPassedText = std::make_unique<Text>(text_font);
+	m_lastLevelFinishedText = std::make_unique<Text>(text_font);
 
 	// setup collision detector
 	m_collisionDetector = std::make_unique<AABBCollisionDetector>();
@@ -319,7 +324,7 @@ void LevelScene::setupRoundStartText()
 	m_roundStartText->setPosition(text_position);
 }
 
-void LevelScene::setupGameOverText()
+void LevelScene::setupLevelFailedText()
 {
 	auto bg_pos = m_background->getPosition();
 	auto bg_size = m_background->getSize();
@@ -328,10 +333,10 @@ void LevelScene::setupGameOverText()
 	auto text_position = bg_pos;
 	auto text_size = glm::vec2(bg_size.x - bg_size.x / 10.0f, 50);
 
-	m_gameOverText->setText("Game over  !  Press space to restart the game  !");
-	m_gameOverText->setColor(SDL_Color{ 255, 255, 255 });
-	m_gameOverText->setSize(text_size);
-	m_gameOverText->setPosition(text_position);
+	m_LevelFailedText->setText("Level failed  !  Press space to restart  !");
+	m_LevelFailedText->setColor(SDL_Color{ 255, 255, 255 });
+	m_LevelFailedText->setSize(text_size);
+	m_LevelFailedText->setPosition(text_position);
 }
 
 void LevelScene::setupLevelPassedText()
@@ -347,6 +352,21 @@ void LevelScene::setupLevelPassedText()
 	m_levelPassedText->setColor(SDL_Color{ 255, 255, 255 });
 	m_levelPassedText->setSize(text_size);
 	m_levelPassedText->setPosition(text_position);
+}
+
+void LevelScene::setupLastLevelPassedText()
+{
+	auto bg_pos = m_background->getPosition();
+	auto bg_size = m_background->getSize();
+
+	// set the text in the middle
+	auto text_position = bg_pos;
+	auto text_size = glm::vec2(bg_size.x - bg_size.x / 10.0f, 50);
+
+	m_lastLevelFinishedText->setText("Last level finished  ! Press space to return to main menu  !");
+	m_lastLevelFinishedText->setColor(SDL_Color{ 255, 255, 255 });
+	m_lastLevelFinishedText->setSize(text_size);
+	m_lastLevelFinishedText->setPosition(text_position);
 }
 
 void LevelScene::setupWallPositionedObjects()
@@ -391,7 +411,7 @@ void LevelScene::removeLifeAndResetObjects()
 
 	if (m_lives == 0) {
 		// game over - show game over text
-		m_state = LevelState::GameOver;
+		m_state = LevelState::LevelFailed;
 	}
 	else {
 		m_state = LevelState::Starting;
@@ -404,24 +424,39 @@ void LevelScene::removeLifeAndResetObjects()
 
 void LevelScene::setupAdvancingToNextLevel()
 {
-	m_state = LevelState::Ended;
+	if (isLastLevel()) {
+		m_state = LevelState::FinishedLastLevel;
+	}
+	else {
+		m_state = LevelState::Finished;
+	}
 }
 
 void LevelScene::advanceToNextLevel()
 {
-	// push new scene to the scene manager and set it as current
-	auto next_level = m_level + 1;
-	std::stringstream level_ss;
-
-	level_ss << "Level" << next_level << "Scene";
-
-	auto next_level_scene = level_ss.str();
-
 	auto& scene_manager = getGameRef().getSceneManager();
 
-	// add the new level to the SceneManager
-	scene_manager.addScene(next_level_scene, new LevelScene(getGameRef(), next_level));
-	scene_manager.setCurrentScene(next_level_scene);
+	// push new scene to the scene manager and set it as current
+	if (m_state == LevelState::FinishedLastLevel) {
+		// switch to main menu
+		scene_manager.setCurrentScene("MainMenuScene");
+	}
+	else {
+		// advance to the next level
+		auto next_level = m_level + 1;
+		std::stringstream level_ss;
+
+		level_ss << "Level" << next_level << "Scene";
+
+		auto next_level_scene = level_ss.str();
+
+		// add the new level to the SceneManager
+		scene_manager.addScene(next_level_scene, new LevelScene(getGameRef(), next_level));
+		scene_manager.setCurrentScene(next_level_scene);
+	}
+
+	// reset this level after switching to the next one
+	resetLevel();
 }
 
 void LevelScene::resetLevel()
@@ -517,7 +552,7 @@ void LevelScene::renderPaddle(SDL_Renderer* renderer)
 
 void LevelScene::renderBall(SDL_Renderer* renderer)
 {
-	if (m_state != LevelState::Ended) {
+	if (!isLevelFinished()) {
 		m_ball->render(renderer);
 	}
 }
@@ -534,18 +569,35 @@ void LevelScene::renderRoundStartText(SDL_Renderer* renderer)
 	}
 }
 
-void LevelScene::renderGameOverText(SDL_Renderer* renderer)
+void LevelScene::renderLevelFailedText(SDL_Renderer* renderer)
 {
-	if (m_state == LevelState::GameOver) {
-		m_gameOverText->render(renderer);
+	if (m_state == LevelState::LevelFailed) {
+		m_LevelFailedText->render(renderer);
 	}
 }
 
 void LevelScene::renderLevelPassedText(SDL_Renderer* renderer)
 {
-	if (m_state == LevelState::Ended) {
+	if (m_state == LevelState::Finished) {
 		m_levelPassedText->render(renderer);
 	}
+}
+
+void LevelScene::renderLastLevelFinishedText(SDL_Renderer* renderer)
+{
+	if (m_state == LevelState::FinishedLastLevel) {
+		m_lastLevelFinishedText->render(renderer);
+	}
+}
+
+bool LevelScene::isLastLevel() const
+{
+	return m_level == MAX_LEVEL;
+}
+
+bool LevelScene::isLevelFinished() const
+{
+	return m_state == LevelState::Finished || m_state == LevelState::FinishedLastLevel;
 }
 
 glm::ivec2 LevelScene::getWindowSize()

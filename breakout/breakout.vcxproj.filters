@@ -64,6 +64,12 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{4d78dfc7-63ed-4d36-9c5b-8143edccce14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Collision">
+      <UniqueIdentifier>{8f00fc7c-de87-4fed-91fd-d3d96f41457d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Collision">
+      <UniqueIdentifier>{085c807e-4225-4eeb-8ff6-a00241d1b1b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="breakout.cpp">
@@ -180,14 +186,14 @@
     <ClCompile Include="MovableTexture2D.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ICollisionDetector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AABBCollisionDetector.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ICollisionDetector.cpp">
+      <Filter>Source Files\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Common.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -306,13 +312,13 @@
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="ICollisionDetector.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Collision</Filter>
     </ClInclude>
     <ClInclude Include="AABBCollisionDetector.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +326,9 @@
       <Filter>Resource Files\levels</Filter>
     </Xml>
     <Xml Include="assets\levels\level-2.xml">
+      <Filter>Resource Files\levels</Filter>
+    </Xml>
+    <Xml Include="assets\levels\level-3.xml">
       <Filter>Resource Files\levels</Filter>
     </Xml>
   </ItemGroup>

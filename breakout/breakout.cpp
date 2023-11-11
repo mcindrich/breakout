@@ -13,10 +13,16 @@
 
 #include <cstdlib>
 
+// don't use console on release build
+
+#ifdef _DEBUG
 // SDL2main fix
 #undef main
 
 int main()
+#else
+int WinMain()
+#endif
 {
 	// init SDL
 	int error = 0;
@@ -49,7 +55,7 @@ int main()
 	}
 
 	// init rand seed
-	std::srand(std::time(NULL));
+	std::srand(static_cast<unsigned int>(std::time(NULL)));
 
 	window = SDL_CreateWindow("breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, 0);
 	if (!window) {

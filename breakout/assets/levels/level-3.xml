@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Level
-	RowCount="3" 
-	ColumnCount="10"
-	RowSpacing="2"
+	RowCount="4"
+	ColumnCount="20"
+	RowSpacing="4"
 	ColumnSpacing="4"
 	BackgroundTexture="backgrounds/background.png"
 	PaddleTexture="paddles/paddle.png"
 	BallTexture="balls/ball.png"
 	PaddleSpeed="500"
-	BallSpeed="300">
+	BallSpeed="400">
 	<BrickTypes>
 		<!-- Soft Brick -->
 		<BrickType
@@ -42,8 +42,9 @@
 		 HitSound="hit-01.wav" />
 	</BrickTypes>
 	<Bricks>
-		MMMMMMMMMM
-		MMSS__MMSS
-		SS_S_SS__S
+		HHHHHHHHHHHHHHHHHHHH
+		MMIIMM__MMMM__MMIIMM
+		SSSSSSSSSSSSSSSSSSSS
+		SSSS_SSSSSSS_SSSS__S
 	</Bricks>
 </Level>

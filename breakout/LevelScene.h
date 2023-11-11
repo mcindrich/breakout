@@ -29,11 +29,10 @@ private:
     enum class LevelState {
         Starting,
         Playing,
-        GameOver,
-        Ended
+        LevelFailed,
+        Finished,
+        FinishedLastLevel,
     };
-
-    friend class Game;
 
     // initialization helpers
     void loadLevelConfigurationAsset(unsigned int level);
@@ -46,8 +45,9 @@ private:
     void generateBricks();
     void createGameObjects();
     void setupRoundStartText();
-    void setupGameOverText();
+    void setupLevelFailedText();
     void setupLevelPassedText();
+    void setupLastLevelPassedText();
     void setupWallPositionedObjects();
 
     // level manipulation
@@ -69,8 +69,12 @@ private:
     void renderBall(SDL_Renderer* renderer);
     void renderHUD(SDL_Renderer* renderer);
     void renderRoundStartText(SDL_Renderer* renderer);
-    void renderGameOverText(SDL_Renderer* renderer);
+    void renderLevelFailedText(SDL_Renderer* renderer);
     void renderLevelPassedText(SDL_Renderer* renderer);
+    void renderLastLevelFinishedText(SDL_Renderer* renderer);
+
+    bool isLastLevel() const;
+    bool isLevelFinished() const;
 
     // window helpers
     glm::ivec2 getWindowSize();
@@ -96,10 +100,13 @@ private:
     std::unique_ptr<Text> m_roundStartText;
 
     // text for game over
-    std::unique_ptr<Text> m_gameOverText;
+    std::unique_ptr<Text> m_LevelFailedText;
 
-    // text for when the level is won
+    // text for when the level is finished
     std::unique_ptr<Text> m_levelPassedText;
+
+    // text for when the last level is finished
+    std::unique_ptr<Text> m_lastLevelFinishedText;
 
     // collision detector between objects
     std::unique_ptr<ICollisionDetector> m_collisionDetector;
