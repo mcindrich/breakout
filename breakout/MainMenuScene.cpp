@@ -1,5 +1,6 @@
 #include "MainMenuScene.h"
 #include "Game.h"
+#include "LevelScene.h"
 
 #include <SDL.h>
 
@@ -44,6 +45,7 @@ void MainMenuScene::update(float delta)
     
     if (UIDrawButtonCentered("Play"))
     {
+        getGameRef().getSceneManager().addScene<LevelScene>("Level1Scene", getGameRef(), 1, 0, 3);
         getGameRef().setCurrentScene("Level1Scene");
     }
     if (UIDrawButtonCentered("Quit"))

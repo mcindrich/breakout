@@ -25,7 +25,7 @@
 // should be loaded from number of files in directory
 constexpr auto MAX_LEVEL = 3;
 
-LevelScene::LevelScene(Game& game, unsigned int level) : Scene(game), m_level(level), m_points(0), m_lives(3), m_state(LevelState::Starting)
+LevelScene::LevelScene(Game& game, unsigned int level, unsigned int points, unsigned int lives) : Scene(game), m_level(level), m_points(points), m_lives(lives), m_state(LevelState::Starting)
 {
 	// load all assets
 	loadLevelConfigurationAsset(level);
@@ -68,6 +68,7 @@ void LevelScene::processEvents()
 					break;
 				case LevelState::LevelFailed:
 					resetLevel();
+					goBackToMainMenu();
 					break;
 				case LevelState::Finished:
 				case LevelState::FinishedLastLevel:
@@ -333,7 +334,7 @@ void LevelScene::setupLevelFailedText()
 	auto text_position = bg_pos;
 	auto text_size = glm::vec2(bg_size.x - bg_size.x / 10.0f, 50);
 
-	m_LevelFailedText->setText("Level failed  !  Press space to restart  !");
+	m_LevelFailedText->setText("Level failed  !  Press space to return to main menu  !");
 	m_LevelFailedText->setColor(SDL_Color{ 255, 255, 255 });
 	m_LevelFailedText->setSize(text_size);
 	m_LevelFailedText->setPosition(text_position);
@@ -406,7 +407,6 @@ void LevelScene::setupWallPositionedObjects()
 
 void LevelScene::removeLifeAndResetObjects()
 {
-	// TODO: implement reseting of the objects
 	m_lives--;
 
 	if (m_lives == 0) {
@@ -451,11 +451,12 @@ void LevelScene::advanceToNextLevel()
 		auto next_level_scene = level_ss.str();
 
 		// add the new level to the SceneManager
-		scene_manager.addScene<LevelScene>(next_level_scene, getGameRef(), next_level);
+		scene_manager.addScene<LevelScene>(next_level_scene, getGameRef(), next_level, m_points, m_lives);
 		scene_manager.setCurrentScene(next_level_scene);
 	}
 
 	// reset this level after switching to the next one
+	// [TODO]: remove, not necesarry anymore
 	resetLevel();
 }
 
@@ -475,6 +476,13 @@ void LevelScene::resetLevel()
 
 	// reset level state to the start
 	m_state = LevelState::Starting;
+}
+
+void LevelScene::goBackToMainMenu()
+{
+	auto& scene_manager = getGameRef().getSceneManager();
+
+	scene_manager.setCurrentScene("MainMenuScene");
 }
 
 void LevelScene::checkCollisions()

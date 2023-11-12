@@ -11,7 +11,6 @@
 Game::Game(SDL_Window* window, SDL_Renderer *renderer) : m_running(false), m_window(window), m_renderer(renderer)
 {
 	// initialize scenes
-	m_sceneManager.addScene<LevelScene>("Level1Scene", *this, 1);
 	m_sceneManager.addScene<MainMenuScene>("MainMenuScene", *this);
 
 	// setup current scene

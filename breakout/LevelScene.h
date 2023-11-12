@@ -17,7 +17,7 @@ class LevelScene :
     public Scene
 {
 public:
-    LevelScene(Game &game, unsigned int level);
+    LevelScene(Game &game, unsigned int level, unsigned int points, unsigned int lives);
 
     virtual void processEvents() override;
 
@@ -55,6 +55,7 @@ private:
     void setupAdvancingToNextLevel();
     void advanceToNextLevel();
     void resetLevel();
+    void goBackToMainMenu();
 
     // collision handling
     void checkCollisions();
