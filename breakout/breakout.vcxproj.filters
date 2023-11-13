@@ -22,18 +22,6 @@
     <Filter Include="Resource Files\sfx">
       <UniqueIdentifier>{c6d23b8f-a167-447f-b320-04ab9a802e12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\imgui">
-      <UniqueIdentifier>{88a7c66e-781a-4dd3-ab3e-da31abdd8a6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\imgui">
-      <UniqueIdentifier>{ab8ce778-7e79-4258-86eb-4695a5717557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\tinyxml2">
-      <UniqueIdentifier>{485abf6a-fd6f-4254-9c17-120f091c745d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\tinyxml2">
-      <UniqueIdentifier>{3c74d99d-340c-4580-b1be-e6d987942307}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Assets">
       <UniqueIdentifier>{244cc809-5968-4fda-8645-15d3b3d883fe}</UniqueIdentifier>
     </Filter>
@@ -70,34 +58,52 @@
     <Filter Include="Source Files\Collision">
       <UniqueIdentifier>{085c807e-4225-4eeb-8ff6-a00241d1b1b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Vendor">
+      <UniqueIdentifier>{51a48440-9915-4e7d-a814-f6d989f54559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Vendor\tinyxml2">
+      <UniqueIdentifier>{485abf6a-fd6f-4254-9c17-120f091c745d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Vendor\imgui">
+      <UniqueIdentifier>{88a7c66e-781a-4dd3-ab3e-da31abdd8a6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vendor">
+      <UniqueIdentifier>{c631f40b-0ee2-428e-8695-598abc78446a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vendor\tinyxml2">
+      <UniqueIdentifier>{3c74d99d-340c-4580-b1be-e6d987942307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vendor\imgui">
+      <UniqueIdentifier>{ab8ce778-7e79-4258-86eb-4695a5717557}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="breakout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui_widgets.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui_tables.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui_impl_sdlrenderer2.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui_impl_sdl2.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui_draw.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui_demo.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\imgui\src\imgui.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\Vendor\imgui</Filter>
     </ClCompile>
     <ClCompile Include="deps\tinyxml2\src\tinyxml2.cpp">
-      <Filter>Source Files\tinyxml2</Filter>
+      <Filter>Source Files\Vendor\tinyxml2</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Source Files\Assets</Filter>
@@ -198,31 +204,31 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\imgui\src\imstb_truetype.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imstb_textedit.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imstb_rectpack.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imgui_internal.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imgui_impl_sdlrenderer2.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imgui_impl_sdl2.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imgui.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="deps\tinyxml2\src\tinyxml2.h">
-      <Filter>Header Files\tinyxml2</Filter>
+      <Filter>Header Files\Vendor\tinyxml2</Filter>
     </ClInclude>
     <ClInclude Include="deps\imgui\src\imconfig.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\Vendor\imgui</Filter>
     </ClInclude>
     <ClInclude Include="AssetManager.h">
       <Filter>Header Files\Assets</Filter>
