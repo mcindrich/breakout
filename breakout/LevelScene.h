@@ -58,9 +58,9 @@ private:
     void goBackToMainMenu();
 
     // collision handling
-    void checkCollisions();
+    void checkCollisions(float delta);
     void checkPaddleCollision();
-    void checkWallCollision();
+    void checkWallCollision(float delta);
     void checkBricksCollision();
 
     // rendering helpers

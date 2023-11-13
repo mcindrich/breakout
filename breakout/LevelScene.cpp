@@ -107,7 +107,7 @@ void LevelScene::update(float delta)
 		m_ball->updatePosition(delta);
 
 		// check for collisions
-		checkCollisions();
+		checkCollisions(delta);
 	}
 }
 
@@ -485,10 +485,10 @@ void LevelScene::goBackToMainMenu()
 	scene_manager.setCurrentScene("MainMenuScene");
 }
 
-void LevelScene::checkCollisions()
+void LevelScene::checkCollisions(float delta)
 {
 	checkPaddleCollision();
-	checkWallCollision();
+	checkWallCollision(delta);
 	checkBricksCollision();
 }
 
@@ -499,7 +499,7 @@ void LevelScene::checkPaddleCollision()
 	}
 }
 
-void LevelScene::checkWallCollision()
+void LevelScene::checkWallCollision(float delta)
 {
 	auto ball_dir = m_ball->getDirection();
 
@@ -515,6 +515,9 @@ void LevelScene::checkWallCollision()
 	if (m_collisionDetector->checkCollision(*m_ball, m_leftWall) || m_collisionDetector->checkCollision(*m_ball, m_rightWall)) {
 		// leave direction Y, change X to other side
 		m_ball->setDirection(glm::normalize(glm::vec2(ball_dir.x * -1, ball_dir.y)));
+		while (!m_collisionDetector->checkCollision(*m_ball, m_leftWall) && !m_collisionDetector->checkCollision(*m_ball, m_rightWall)) {
+			m_ball->updatePosition(delta);
+		}
 	}
 }
 
